@@ -1,7 +1,8 @@
 const http = require('http')
+const fs = require('fs')
 
 const server = http.createServer((req, res) => {
-  const { method, url } = req
+  const { url, method } = req
 
   // set header metadata to html (says we are sending html); there are many headers
   // some headers are set automatically by the server
@@ -20,6 +21,13 @@ const server = http.createServer((req, res) => {
       </body>`
     )
     res.write('</html>')
+    return res.end()
+  }
+
+  if (url === '/message' && method === 'POST') {
+    fs.writeFileSync('message.txt', 'DUMMY')
+    res.statusCode = 302
+    res.setHeader('Location', '/')
     return res.end()
   }
 }) // creates a server
