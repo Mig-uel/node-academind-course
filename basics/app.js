@@ -5,8 +5,7 @@ const server = http.createServer((req, res) => {
 
   console.log(url, method)
 
-  // set header metadata to html (says we are sending html)
-  // there are many headers
+  // set header metadata to html (says we are sending html); there are many headers
   // some headers are set automatically by the server
   res.setHeader('Content-Type', 'text/html')
 
