@@ -25,7 +25,21 @@ const server = http.createServer((req, res) => {
   }
 
   if (url === '/message' && method === 'POST') {
-    fs.writeFileSync('message.txt', 'DUMMY')
+    const body = []
+
+    req.on('data', (chunk) => {
+      console.log(chunk)
+      body.push(chunk)
+    }) // on every every stream of data/chunk
+
+    req.on('end', () => {
+      const parsedBody = Buffer.concat(body).toString() // concat the array of chunks into a new Buffer and convert to string assuming it's text
+
+      const message = parsedBody.split('=')[1]
+
+      fs.writeFileSync('message.txt', message)
+    })
+
     res.statusCode = 302
     res.setHeader('Location', '/')
     return res.end()
