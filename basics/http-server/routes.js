@@ -45,4 +45,4 @@ const requestHandler = (req, res) => {
   }
 }
 
-module.exports = requestHandler // module is exposed publicly which has an exports property
+module.exports = { routes: requestHandler } // module is exposed publicly which has an exports property
