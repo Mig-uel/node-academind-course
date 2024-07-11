@@ -16,6 +16,11 @@ app.get('/', (req, res) => {
   return res.send('<h1>Hello, world!</h1>')
 })
 
+app.use((req, res, next) => {
+  res.status(404)
+  return res.send('<h1>Path not found</h1>')
+})
+
 // server
 app.listen(PORT, (req, res) => {
   console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
