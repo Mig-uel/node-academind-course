@@ -1,8 +1,8 @@
 const http = require('http')
 
 // route handlers
-const requestHandler = require('./routes')
+const routes = require('./routes')
 
-const server = http.createServer(requestHandler) // creates a server
+const server = http.createServer(routes) // creates a server
 
 server.listen(3000)
