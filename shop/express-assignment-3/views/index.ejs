@@ -1,0 +1,31 @@
+<!-- Head Partial -->
+<%- include('includes/head.ejs') %>
+
+<!-- Nav Partial -->
+<%- include('includes/nav.ejs') %>
+
+<h1>Users</h1>
+
+<form action="/users" method="POST">
+  <span class="form-control">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required />
+  </span>
+
+  <button type="submit">Add User</button>
+</form>
+<% if (users.length) { %>
+<div>
+  <p>Users:</p>
+  <ul>
+    <% for (const user of users) { %>
+    <li><%= user.name %></li>
+    <% } %>
+  </ul>
+</div>
+<% } else { %>
+<p>No users yet...</p>
+<% } %>
+
+<!-- End Partial -->
+<%- include('includes/end.ejs') %>
