@@ -6,9 +6,7 @@ const products = []
 adminRouter
   .route('/product')
   .get((req, res) => {
-    return res
-      .status(200)
-      .sendFile(path.join(__dirname, '..', 'views', 'add-product.html'))
+    return res.status(200).render('add-product', { docTitle: 'Add Product' })
   })
   .post((req, res) => {
     const { body } = req
