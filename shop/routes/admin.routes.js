@@ -1,6 +1,8 @@
 const path = require('path')
 const adminRouter = require('express').Router()
 
+const products = []
+
 adminRouter
   .route('/product')
   .get((req, res) => {
@@ -10,9 +12,11 @@ adminRouter
   })
   .post((req, res) => {
     const { body } = req
-    console.log(body)
+    const { title } = body
 
-    return res.send('<h1>Product Added!</h1>')
+    products.push({ title })
+
+    return res.redirect('/')
   })
 
-module.exports = { adminRouter }
+module.exports = { adminRouter, products }
