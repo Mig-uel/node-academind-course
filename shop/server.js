@@ -18,10 +18,10 @@ app.use(express.urlencoded({ extended: true })) // parse form data
 app.use(express.json()) // parse json data
 
 // routes
-app.use(adminRouter)
+app.use('/admin', adminRouter)
 app.use(shopRouter)
 
-// 404 - not found
+// 404
 app.use((req, res, next) => res.redirect(302, '/'))
 
 // server
