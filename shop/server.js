@@ -1,7 +1,9 @@
 // core modules
 const path = require('path')
-const express = require('express')
 require('colors')
+
+const express = require('express')
+const handlebars = require('express-handlebars')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -10,7 +12,8 @@ const { shopRouter } = require('./routes/shop.routes')
 // config
 const PORT = 3000
 const app = express()
-app.set('view engine', 'pug') // set view engine
+app.engine('handlebars', handlebars.ExpressHandlebars)
+app.set('view engine', 'handlebars') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
