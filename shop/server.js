@@ -3,7 +3,6 @@ const path = require('path')
 require('colors')
 
 const express = require('express')
-const handlebars = require('express-handlebars')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -12,8 +11,7 @@ const { shopRouter } = require('./routes/shop.routes')
 // config
 const PORT = 3000
 const app = express()
-app.engine('hbs', handlebars.ExpressHandlebars)
-app.set('view engine', 'hbs') // set view engine
+app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
@@ -31,7 +29,9 @@ app.use('/admin', adminRouter)
 app.use(shopRouter)
 
 // 404
-app.use((req, res, next) => res.status(404).render('404'))
+app.use((req, res, next) =>
+  res.status(404).render('404', { docTitle: 'Page Not Found' })
+)
 
 // server
 app.listen(PORT, (req, res) => {
