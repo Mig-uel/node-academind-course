@@ -12,8 +12,8 @@ const { shopRouter } = require('./routes/shop.routes')
 // config
 const PORT = 3000
 const app = express()
-app.engine('handlebars', handlebars.ExpressHandlebars)
-app.set('view engine', 'handlebars') // set view engine
+app.engine('hbs', handlebars.ExpressHandlebars)
+app.set('view engine', 'hbs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
