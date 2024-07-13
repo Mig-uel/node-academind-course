@@ -12,6 +12,7 @@ const PORT = 3000
 const app = express()
 
 // middleware
+// app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
 app.use((req, res, next) => {
   console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow.inverse)
