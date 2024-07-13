@@ -10,6 +10,8 @@ const { shopRouter } = require('./routes/shop.routes')
 // config
 const PORT = 3000
 const app = express()
+app.set('view engine', 'pug') // set view engine
+app.set('views', 'views') // already default, just example
 
 // middleware
 // app.use(express.static('public'))
