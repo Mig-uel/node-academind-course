@@ -6,7 +6,12 @@ const products = []
 adminRouter
   .route('/product')
   .get((req, res) => {
-    return res.status(200).render('add-product', { docTitle: 'Add Product' })
+    return res
+      .status(200)
+      .render('add-product', {
+        docTitle: 'Add Product',
+        path: '/admin/product',
+      })
   })
   .post((req, res) => {
     const { body } = req
