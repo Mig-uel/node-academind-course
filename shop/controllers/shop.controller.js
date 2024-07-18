@@ -20,6 +20,14 @@ const getProducts = async (req, res) => {
   })
 }
 
+const getProduct = async (req, res) => {
+  const { id } = req.params
+
+  Product.findById(id, (product) => console.log(product))
+
+  return res.send(id)
+}
+
 const getCart = async (req, res) => {
   return res.render('shop/cart', {
     docTitle: 'Cart',
@@ -41,4 +49,11 @@ const getCheckout = async (req, res) => {
   })
 }
 
-module.exports = { getHome, getProducts, getCart, getOrders, getCheckout }
+module.exports = {
+  getHome,
+  getProducts,
+  getProduct,
+  getCart,
+  getOrders,
+  getCheckout,
+}
