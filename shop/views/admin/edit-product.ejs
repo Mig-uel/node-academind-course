@@ -1,0 +1,38 @@
+<!-- Head Partial -->
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/styles/product.css">
+<link rel="stylesheet" href="/styles/forms.css">
+</head>
+
+<body>
+  <!-- Navigation Partial -->
+  <%- include('../includes/navigation.ejs') %>
+
+  <main>
+    <form class="product-form" action="/admin/edit/<%= product.id %>" method="POST">
+      <div class="form-control">
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title" value="<%= product.title %>" required />
+      </div>
+
+      <div class="form-control">
+        <label for="imageUrl">Image URL</label>
+        <input type="text" name="imageUrl" id="imageUrl" value="<%= product.imageUrl %>" required />
+      </div>
+
+      <div class="form-control">
+        <label for="price">Price</label>
+        <input type="number" name="price" id="price" step="0.01" value="<%= product.price %>" required />
+      </div>
+
+      <div class="form-control">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" rows="5"><%= product.description %></textarea>
+      </div>
+
+      <button type="submit">Add Product</button>
+    </form>
+  </main>
+
+  <!-- End Partial -->
+  <%- include('../includes/end.ejs') %>
