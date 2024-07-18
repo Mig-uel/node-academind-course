@@ -19,12 +19,12 @@ const getAddProductForm = async (req, res) => {
 
 const addProduct = async (req, res) => {
   const { body } = req
-  const { title } = body
+  const { title, imageUrl, description, price } = body
 
-  const product = new Product(title)
+  const product = new Product(title, imageUrl, description, price)
   product.save()
 
-  return res.redirect('/products')
+  return res.redirect('/')
 }
 
 module.exports = { adminGetProducts, getAddProductForm, addProduct }
