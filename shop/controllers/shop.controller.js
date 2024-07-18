@@ -28,7 +28,7 @@ const getProduct = async (req, res) => {
       return res.render('shop/product-detail', {
         product,
         docTitle: product.title,
-        path: '',
+        path: '/products',
       })
     } else return res.render('404')
   })
