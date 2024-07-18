@@ -1,4 +1,5 @@
 const { Product } = require('../models/product.model')
+const { Cart } = require('../models/cart.models')
 
 const getHome = async (req, res) => {
   Product.fetchAll((products) => {
@@ -42,7 +43,13 @@ const getCart = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-  const { id } = req.body
+  const { id, price } = req.body
+
+  Product.findById(id, (product) => {
+    if (product) {
+      Cart.addProduct(id, product.price)
+    }
+  })
 
   console.log(`Added to Cart: ${id}`)
   return res.redirect(302, '/cart')
