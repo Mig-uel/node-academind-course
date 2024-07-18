@@ -7,10 +7,12 @@ const {
   getCart,
   getOrders,
   getCheckout,
+  getProduct,
 } = require('../controllers/shop.controller')
 
 shopRouter.route('/').get(getHome)
 shopRouter.route('/products').get(getProducts)
+shopRouter.route('/products/:id').get(getProduct)
 shopRouter.route('/cart').get(getCart)
 shopRouter.route('/checkout').get(getCheckout)
 shopRouter.route('/orders').get(getOrders)
