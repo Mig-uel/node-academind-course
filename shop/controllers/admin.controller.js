@@ -1,4 +1,4 @@
-const products = []
+const { Product } = require('../models/product.model')
 
 const getAddProductForm = async (req, res) => {
   return res.status(200).render('add-product', {
@@ -11,9 +11,10 @@ const addProduct = async (req, res) => {
   const { body } = req
   const { title } = body
 
-  products.push({ title })
+  const product = new Product(title)
+  product.save()
 
   return res.redirect('/')
 }
 
-module.exports = { getAddProductForm, addProduct, products }
+module.exports = { getAddProductForm, addProduct }
