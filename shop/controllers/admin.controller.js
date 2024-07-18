@@ -1,9 +1,19 @@
 const { Product } = require('../models/product.model')
 
+const adminGetProducts = async (req, res) => {
+  Product.fetchAll((products) => {
+    return res.render('admin/admin-product-list', {
+      products,
+      docTitle: 'Admin All Products',
+      path: '/admin/products',
+    })
+  })
+}
+
 const getAddProductForm = async (req, res) => {
-  return res.status(200).render('add-product', {
+  return res.status(200).render('admin/add-product', {
     docTitle: 'Add Product',
-    path: '/admin/product',
+    path: '/admin/products/add',
   })
 }
 
@@ -17,4 +27,4 @@ const addProduct = async (req, res) => {
   return res.redirect('/')
 }
 
-module.exports = { getAddProductForm, addProduct }
+module.exports = { adminGetProducts, getAddProductForm, addProduct }
