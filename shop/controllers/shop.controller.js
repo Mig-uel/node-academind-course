@@ -25,13 +25,13 @@ const getProduct = async (req, res) => {
   const { id } = req.params
 
   Product.findById(id, (product) => {
-    if (product) {
-      return res.render('shop/product-detail', {
-        product,
-        docTitle: product.title,
-        path: '/products',
-      })
-    } else return res.render('404')
+    if (!product) return res.send('<h1>Product not found!</h1>')
+
+    return res.render('shop/product-detail', {
+      product,
+      docTitle: product.title,
+      path: '/products',
+    })
   })
 }
 
@@ -43,7 +43,7 @@ const getCart = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-  const { id, price } = req.body
+  const { id } = req.body
 
   Product.findById(id, (product) => {
     if (product) {
@@ -51,7 +51,6 @@ const addToCart = async (req, res) => {
     }
   })
 
-  console.log(`Added to Cart: ${id}`)
   return res.redirect(302, '/cart')
 }
 
