@@ -24,7 +24,7 @@ const addProduct = async (req, res) => {
   const product = new Product(title)
   product.save()
 
-  return res.redirect('/')
+  return res.redirect('/products')
 }
 
 module.exports = { adminGetProducts, getAddProductForm, addProduct }
