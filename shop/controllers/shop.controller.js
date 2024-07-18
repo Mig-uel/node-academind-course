@@ -41,6 +41,13 @@ const getCart = async (req, res) => {
   })
 }
 
+const addToCart = async (req, res) => {
+  const { id } = req.body
+
+  console.log(`Added to Cart: ${id}`)
+  return res.redirect(302, '/cart')
+}
+
 const getOrders = async (req, res) => {
   return res.render('shop/orders', {
     docTitle: 'Orders',
@@ -60,6 +67,7 @@ module.exports = {
   getProducts,
   getProduct,
   getCart,
+  addToCart,
   getOrders,
   getCheckout,
 }
