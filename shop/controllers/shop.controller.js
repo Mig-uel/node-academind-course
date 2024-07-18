@@ -23,9 +23,15 @@ const getProducts = async (req, res) => {
 const getProduct = async (req, res) => {
   const { id } = req.params
 
-  Product.findById(id, (product) => console.log(product))
-
-  return res.send(id)
+  Product.findById(id, (product) => {
+    if (product) {
+      return res.render('shop/product-detail', {
+        product,
+        docTitle: product.title,
+        path: '',
+      })
+    } else return res.render('404')
+  })
 }
 
 const getCart = async (req, res) => {
