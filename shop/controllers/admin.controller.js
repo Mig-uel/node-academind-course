@@ -27,4 +27,23 @@ const addProduct = async (req, res) => {
   return res.redirect('/')
 }
 
-module.exports = { adminGetProducts, getAddProductForm, addProduct }
+const getEditProductForm = async (req, res) => {
+  const { id } = req.params
+
+  Product.findById(id, (product) => {
+    if (!product) return res.send('<h1>Product not found</h1>')
+
+    return res.render('admin/edit-product', {
+      product,
+      docTitle: `Edit ${product.title}`,
+      path: '/admin/products',
+    })
+  })
+}
+
+module.exports = {
+  adminGetProducts,
+  getAddProductForm,
+  addProduct,
+  getEditProductForm,
+}
