@@ -7,6 +7,7 @@ const express = require('express')
 // router
 const { adminRouter } = require('./routes/admin.routes')
 const { shopRouter } = require('./routes/shop.routes')
+const { use404 } = require('./controllers/error.controller')
 
 // config
 const PORT = 3000
@@ -29,9 +30,7 @@ app.use('/admin', adminRouter)
 app.use(shopRouter)
 
 // 404
-app.use((req, res, next) =>
-  res.status(404).render('404', { docTitle: 'Page Not Found' })
-)
+app.use(use404)
 
 // server
 app.listen(PORT, (req, res) => {
