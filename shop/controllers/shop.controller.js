@@ -1,9 +1,37 @@
 const { Product } = require('../models/product.model')
 
-const getProducts = async (req, res) => {
+const getHome = async (req, res) => {
   Product.fetchAll((products) => {
-    return res.render('shop', { products, docTitle: 'Shop', path: '/' })
+    return res.render('shop/index', {
+      products,
+      docTitle: 'Home',
+      path: '/',
+    })
   })
 }
 
-module.exports = { getProducts }
+const getProducts = async (req, res) => {
+  Product.fetchAll((products) => {
+    return res.render('shop/product-list', {
+      products,
+      docTitle: 'All Products',
+      path: '/products',
+    })
+  })
+}
+
+const getCart = async (req, res) => {
+  return res.render('shop/cart', {
+    docTitle: 'Cart',
+    path: '/cart',
+  })
+}
+
+const getCheckout = async (req, res) => {
+  return res.render('shop/checkout', {
+    docTitle: 'Checkout',
+    path: '/checkout',
+  })
+}
+
+module.exports = { getHome, getProducts, getCart, getCheckout }
