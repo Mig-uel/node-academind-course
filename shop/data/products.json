@@ -1,1 +1,9 @@
-[{"title":"Grokking","imageUrl":"https://m.media-amazon.com/images/I/81hveVIYkrL._AC_UF1000,1000_QL80_.jpg","description":"an algorithms book.","price":"39"}]
+[
+  {
+    "title": "Grokking Algorithms",
+    "imageUrl": "https://m.media-amazon.com/images/I/81hveVIYkrL._AC_UF1000,1000_QL80_.jpg",
+    "description": "an algorithms book.",
+    "price": "39.99",
+    "id": "64338234-1010-43ed-b33b-91fef69d971c"
+  }
+]
