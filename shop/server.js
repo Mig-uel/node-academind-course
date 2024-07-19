@@ -35,8 +35,8 @@ app.use(shopRouter)
 // 404
 app.use(use404)
 
-// sequelize sync
-const sync = async () => {
+// sequelize sync and start express server
+const init = async () => {
   try {
     const res = await sequelize.sync()
 
@@ -51,4 +51,4 @@ const sync = async () => {
   }
 }
 
-sync()
+init()
