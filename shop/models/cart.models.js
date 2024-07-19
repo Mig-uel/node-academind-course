@@ -44,6 +44,8 @@ class Cart {
       const cart = JSON.parse(data)
       const product = cart.products.find((p) => p.id === id)
 
+      if (!product) return
+
       cart.products = cart.products.filter((p) => p.id !== product.id)
       cart.totalPrice = +(cart.totalPrice - price * product.qty).toFixed(2)
 
@@ -56,7 +58,7 @@ class Cart {
       const cart = JSON.parse(data)
 
       if (err) callback(null)
-      
+
       callback(cart)
     })
   }
