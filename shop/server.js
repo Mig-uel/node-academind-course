@@ -1,8 +1,9 @@
 // core modules
 const path = require('path')
-require('colors')
 
+require('colors')
 const express = require('express')
+const methodOverride = require('method-override')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -18,6 +19,7 @@ app.set('views', 'views') // already default, just example
 // middleware
 // app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
+app.use(methodOverride('_method'))
 app.use((req, res, next) => {
   console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow.inverse)
   next()
