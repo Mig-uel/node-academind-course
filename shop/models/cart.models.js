@@ -4,7 +4,7 @@ const path = require('path')
 const pathName = path.join(__dirname, '..', 'data', 'cart.json')
 
 class Cart {
-  static addProduct(id, price) {
+  static addToCart(id, price) {
     // fetch prev cart
     fs.readFile(pathName, (err, data) => {
       let cart = { products: [], totalPrice: 0 }
@@ -33,6 +33,20 @@ class Cart {
       )
 
       // save to file
+      fs.writeFile(pathName, JSON.stringify(cart), (err) => console.log(err))
+    })
+  }
+
+  static deleteFromCart(id, price) {
+    fs.readFile(pathName, (err, data) => {
+      if (err) return
+
+      const cart = JSON.parse(data)
+      const product = cart.products.find((p) => p.id === id)
+
+      cart.products = cart.products.filter((p) => p.id !== product.id)
+      cart.totalPrice = +(cart.totalPrice - price * product.qty).toFixed(2)
+
       fs.writeFile(pathName, JSON.stringify(cart), (err) => console.log(err))
     })
   }
