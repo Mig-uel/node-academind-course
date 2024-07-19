@@ -2,22 +2,22 @@ const { Product } = require('../models/product.model')
 const { Cart } = require('../models/cart.models')
 
 const getHome = async (req, res) => {
-  Product.fetchAll((products) => {
-    return res.render('shop/index', {
-      products,
-      docTitle: 'Home',
-      path: '/',
-    })
+  const products = await Product.fetchAllProducts()
+
+  return res.render('shop/index', {
+    products,
+    docTitle: 'Home',
+    path: '/',
   })
 }
 
 const getProducts = async (req, res) => {
-  Product.fetchAll((products) => {
-    return res.render('shop/product-list', {
-      products,
-      docTitle: 'All Products',
-      path: '/products',
-    })
+  const products = await Product.fetchAllProducts()
+
+  return res.render('shop/product-list', {
+    products,
+    docTitle: 'All Products',
+    path: '/products',
   })
 }
 
