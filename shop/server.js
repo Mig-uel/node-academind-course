@@ -4,7 +4,11 @@ const path = require('path')
 require('colors')
 const express = require('express')
 const methodOverride = require('method-override')
+
+// db
 const { sequelize } = require('./utils/db.utils')
+const Product = require('./models/product.models')
+const User = require('./models/user.models')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -35,12 +39,22 @@ app.use(shopRouter)
 // 404
 app.use(use404)
 
+// define relations
+Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
+User.hasMany(Product)
+
 // sequelize sync and start express server
 const init = async () => {
   try {
     const res = await sequelize.sync()
 
     if (!res) throw new Error()
+
+    let user = await User.findByPk(1)
+
+    if (!user) {
+      user = await User.create({ name: 'Admin', email: 'admin@email.com' })
+    }
 
     // server
     app.listen(PORT, (req, res) => {
