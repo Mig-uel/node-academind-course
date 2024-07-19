@@ -36,9 +36,22 @@ const getProduct = async (req, res) => {
 }
 
 const getCart = async (req, res) => {
-  return res.render('shop/cart', {
-    docTitle: 'Cart',
-    path: '/cart',
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = []
+
+      products.forEach((p) => {
+        cart.products.forEach((c) => {
+          if (c.id === p.id) cartProducts.push({ ...p, qty: c.qty })
+        })
+      })
+
+      return res.render('shop/cart', {
+        cart: { products: [...cartProducts], totalPrice: cart.totalPrice },
+        docTitle: 'Cart',
+        path: '/cart',
+      })
+    })
   })
 }
 
