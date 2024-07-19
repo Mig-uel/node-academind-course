@@ -29,14 +29,14 @@ const addProduct = async (req, res) => {
 const getEditProductForm = async (req, res) => {
   const { id } = req.params
 
-  Product.findById(id, (product) => {
-    if (!product) return res.send('<h1>Product not found</h1>')
+  const product = await Product.findById(id)
 
-    return res.render('admin/edit-product', {
-      product,
-      docTitle: `Edit ${product.title}`,
-      path: '/admin/products',
-    })
+  if (typeof product === 'string') return res.send(`<h1>${product}</h1>`)
+
+  return res.render('admin/edit-product', {
+    product,
+    docTitle: `Edit ${product.title}`,
+    path: '/admin/products',
   })
 }
 
