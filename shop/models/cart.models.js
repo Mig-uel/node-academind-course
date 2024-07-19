@@ -50,6 +50,16 @@ class Cart {
       fs.writeFile(pathName, JSON.stringify(cart), (err) => console.log(err))
     })
   }
+
+  static getCart(callback) {
+    fs.readFile(pathName, (err, data) => {
+      const cart = JSON.parse(data)
+
+      if (err) callback(null)
+      
+      callback(cart)
+    })
+  }
 }
 
 module.exports = { Cart }
