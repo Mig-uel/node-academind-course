@@ -82,7 +82,17 @@ const editProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { id } = req.body
 
-  Product.deleteById(id)
+  try {
+    const product = await Product.findByPk(id)
+
+    if (!product) throw new Error()
+
+    await product.destroy()
+
+    return res.redirect('/admin/products')
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 
   res.redirect('/admin/products')
 }
