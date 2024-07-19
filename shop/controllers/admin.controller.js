@@ -45,25 +45,38 @@ const addProduct = async (req, res) => {
 const getEditProductForm = async (req, res) => {
   const { id } = req.params
 
-  const product = await Product.findById(id)
+  try {
+    const product = await Product.findByPk(id)
 
-  if (typeof product === 'string') return res.send(`<h1>${product}</h1>`)
+    if (!product) throw new Error()
 
-  return res.render('admin/edit-product', {
-    product,
-    docTitle: `Edit ${product.title}`,
-    path: '/admin/products',
-  })
+    return res.render('admin/edit-product', {
+      product,
+      docTitle: `Edit ${product.title}`,
+      path: '/admin/products',
+    })
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 }
 
 const editProduct = async (req, res) => {
   const { title, imageUrl, price, description, id } = req.body
 
-  const updatedProduct = new Product(title, imageUrl, description, price, id)
+  try {
+    const updatedProduct = await Product.findByPk(id)
 
-  updatedProduct.save()
+    updatedProduct.title = title
+    updatedProduct.imageUrl = imageUrl
+    updatedProduct.price = price
+    updatedProduct.description = description
 
-  return res.redirect(`/admin/products`)
+    await updatedProduct.save()
+
+    return res.redirect(`/admin/products`)
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 }
 
 const deleteProduct = async (req, res) => {
