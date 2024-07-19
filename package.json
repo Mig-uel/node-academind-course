@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "method-override": "^3.0.0"
+  },
+  "devDependencies": {
+    "mysql2": "^3.10.3"
   }
 }
