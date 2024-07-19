@@ -81,6 +81,18 @@ const getCheckout = async (req, res) => {
   })
 }
 
+const removeFromCart = (req, res) => {
+  const { id } = req.body
+
+  Product.findById(id, (product) => {
+    if (!product) return res.send('<h1>Product not found</h1>')
+
+    Cart.deleteFromCart(id, product.price)
+
+    return res.redirect('/cart')
+  })
+}
+
 module.exports = {
   getHome,
   getProducts,
@@ -89,4 +101,5 @@ module.exports = {
   addToCart,
   getOrders,
   getCheckout,
+  removeFromCart,
 }
