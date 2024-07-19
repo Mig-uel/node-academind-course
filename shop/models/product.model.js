@@ -11,7 +11,7 @@ class Product {
 
   async save() {
     try {
-      const queryString =
+      const sql =
         'INSERT INTO products (title, price, imageUrl, description) VALUES (?, ?, ?, ?)'
 
       const res = await db.execute(queryString, [
@@ -42,7 +42,18 @@ class Product {
     }
   }
 
-  static findById(id) {}
+  static async findById(id) {
+    try {
+      const sql = 'SELECT * FROM PRODUCTS WHERE products.id = ?'
+      const data = await db.execute(sql, [id])
+
+      if (!data) throw new Error()
+
+      return data[0][0]
+    } catch (error) {
+      return error.message
+    }
+  }
 
   static deleteById(id) {}
 }
