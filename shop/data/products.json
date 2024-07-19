@@ -1,1 +1,9 @@
-[{"title":"Grokking Algorithms (2nd Edition)","imageUrl":"https://m.media-amazon.com/images/I/81hveVIYkrL._AC_UF1000,1000_QL80_.jpg","description":"an algorithms book.","price":"24.99","id":"64338234-1010-43ed-b33b-91fef69d971c"},{"title":"Hunger Games (Part 1)","imageUrl":"https://m.media-amazon.com/images/I/71un2hI4mcL._AC_UF1000,1000_QL80_.jpg","description":"the hunger games.","price":"9.99","id":"43c1b7e4-7de5-46b9-9a3f-cace65ab00b7"}]
+[
+  {
+    "title": "Grokking Algorithms",
+    "imageUrl": "https://m.media-amazon.com/images/I/81hveVIYkrL._AC_UF1000,1000_QL80_.jpg",
+    "description": "an algorithms book.",
+    "price": 39.99,
+    "id": "9d83927a-8a59-4028-ad26-98edf9e3d578"
+  }
+]
