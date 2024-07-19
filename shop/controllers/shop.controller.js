@@ -26,6 +26,8 @@ const getProduct = async (req, res) => {
 
   const product = await Product.findById(id)
 
+  console.log(product)
+
   if (typeof product === 'string') return res.send(`<h1>${product}</h1>`)
 
   return res.render('shop/product-detail', {
