@@ -22,6 +22,10 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
+app.use(async (req, res, next) => {
+  req.user = await User.findByPk(1)
+  next()
+})
 // app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
