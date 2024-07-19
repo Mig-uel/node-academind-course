@@ -1,4 +1,4 @@
-const { Product } = require('../models/product.model')
+const Product = require('../models/product.model')
 
 const adminGetProducts = async (req, res) => {
   const products = await Product.fetchAllProducts()
@@ -20,10 +20,20 @@ const getAddProductForm = async (req, res) => {
 const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
 
-  const product = new Product(title, imageUrl, description, +price)
-  await product.save()
+  try {
+    const product = await Product.create({
+      title,
+      price,
+      imageUrl,
+      description,
+    })
 
-  return res.redirect('/admin/products')
+    if (!product) throw new Error()
+
+    return res.redirect('/admin/products')
+  } catch (error) {
+    return res.send(`Error: ${error.message}`)
+  }
 }
 
 const getEditProductForm = async (req, res) => {
