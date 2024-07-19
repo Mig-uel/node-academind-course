@@ -1,40 +1,54 @@
-const { Product } = require('../models/product.model')
+const Product = require('../models/product.model')
 const { Cart } = require('../models/cart.models')
 
 const getHome = async (req, res) => {
-  const products = await Product.fetchAllProducts()
+  try {
+    const products = await Product.findAll()
 
-  return res.render('shop/index', {
-    products,
-    docTitle: 'Home',
-    path: '/',
-  })
+    if (!products) throw new Error()
+
+    return res.render('shop/index', {
+      products,
+      docTitle: 'Home',
+      path: '/',
+    })
+  } catch (error) {
+    return res.send(`<h1>Error: ${error}</h1>`)
+  }
 }
 
 const getProducts = async (req, res) => {
-  const products = await Product.fetchAllProducts()
+  try {
+    const products = await Product.findAll()
 
-  return res.render('shop/product-list', {
-    products,
-    docTitle: 'All Products',
-    path: '/products',
-  })
+    if (!products) throw new Error()
+
+    return res.render('shop/product-list', {
+      products,
+      docTitle: 'All Products',
+      path: '/products',
+    })
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 }
 
 const getProduct = async (req, res) => {
   const { id } = req.params
 
-  const product = await Product.findById(id)
+  try {
+    const product = await Product.findByPk(id)
 
-  console.log(product)
+    if (!product) throw new Error()
 
-  if (typeof product === 'string') return res.send(`<h1>${product}</h1>`)
-
-  return res.render('shop/product-detail', {
-    product,
-    docTitle: product.title,
-    path: '/products',
-  })
+    return res.render('shop/product-detail', {
+      product,
+      docTitle: product.title,
+      path: '/products',
+    })
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 }
 
 const getCart = async (req, res) => {
