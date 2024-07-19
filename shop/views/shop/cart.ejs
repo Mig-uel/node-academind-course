@@ -9,6 +9,22 @@
 
   <main>
     <h1>Cart</h1>
+
+    <% if (cart.products.length) { %>
+    <ul>
+      <% cart.products.forEach(p => {%>
+      <p>
+        <li><%= p.title %> (<%= p.qty %>)</li>
+      <form action="/cart?_method=DELETE" method="POST">
+        <input type="hidden" name="id" value="<%= p.id %>">
+        <button type="submit" class="btn">Remove</button>
+      </form>
+      </p>
+      <% }) %>
+    </ul>
+    <% } else { %>
+    <h3>Cart is empty</h3>
+    <% } %>
   </main>
 
   <!-- End Partial -->
