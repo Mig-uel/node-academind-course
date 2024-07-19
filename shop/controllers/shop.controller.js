@@ -73,6 +73,21 @@ const getCart = async (req, res) => {
 
 const addToCart = async (req, res) => {
   const { id } = req.body
+  const { user } = req
+
+  try {
+    const cart = await user.getCart()
+    const products = await cart.getProducts({ where: { id } })
+
+    let product
+    if (products.length) {
+      product = products[0]
+    }
+
+    
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 
   Product.findById(id, (product) => {
     if (!product) return res.send('<h1>Product not found</h1>')
