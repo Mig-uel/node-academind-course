@@ -52,23 +52,23 @@ const getProduct = async (req, res) => {
 }
 
 const getCart = async (req, res) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = []
+  const { user } = req
 
-      products.forEach((p) => {
-        cart.products.forEach((c) => {
-          if (c.id === p.id) cartProducts.push({ ...p, qty: c.qty })
-        })
-      })
+  try {
+    const cart = await user.getCart()
 
-      return res.render('shop/cart', {
-        cart: { products: [...cartProducts], totalPrice: cart.totalPrice },
-        docTitle: 'Cart',
-        path: '/cart',
-      })
+    if (!cart) throw new Error()
+
+    const products = await cart.getProducts()
+
+    return res.render('shop/cart', {
+      cart: { products },
+      docTitle: 'Cart',
+      path: '/cart',
     })
-  })
+  } catch (error) {
+    return res.send(`<h1>${error}</h1>`)
+  }
 }
 
 const addToCart = async (req, res) => {
