@@ -22,7 +22,7 @@ app.set('views', 'views') // already default, just example
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
 app.use((req, res, next) => {
-  console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow.inverse)
+  console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow)
   next()
 }) // method - url - status
 app.use(express.urlencoded({ extended: true })) // parse form data
