@@ -18,13 +18,12 @@ const getAddProductForm = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
-  const { body } = req
-  const { title, imageUrl, description, price } = body
+  const { title, imageUrl, description, price } = req.body
 
   const product = new Product(title, imageUrl, description, price)
   product.save()
 
-  return res.redirect('/')
+  return res.redirect('/admin/products')
 }
 
 const getEditProductForm = async (req, res) => {
@@ -41,9 +40,31 @@ const getEditProductForm = async (req, res) => {
   })
 }
 
+const editProduct = async (req, res) => {
+  const { title, imageUrl, price, description, id } = req.body
+
+  const updatedProduct = new Product(title, imageUrl, description, price, id)
+
+  updatedProduct.save()
+
+  return res.redirect(`/admin/products`)
+}
+
+const deleteProduct = async (req, res) => {
+  const { id } = req.body
+
+  Product.findById(id, (product) => {
+    if (!product) return res.send('Product not found!')
+
+    return res.send(`<h1>DELETED ID: ${product.id}</h1>`)
+  })
+}
+
 module.exports = {
   adminGetProducts,
   getAddProductForm,
   addProduct,
   getEditProductForm,
+  editProduct,
+  deleteProduct,
 }
