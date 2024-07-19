@@ -5,5 +5,12 @@
     "description": "an algorithms book.",
     "price": 39.99,
     "id": "9d83927a-8a59-4028-ad26-98edf9e3d578"
+  },
+  {
+    "title": "Hunger Games",
+    "imageUrl": "https://m.media-amazon.com/images/I/71un2hI4mcL._AC_UF1000,1000_QL80_.jpg",
+    "description": "the hunger games.",
+    "price": 29.99,
+    "id": "95a68b6e-2d01-47f7-8e68-470827d18ead"
   }
 ]
