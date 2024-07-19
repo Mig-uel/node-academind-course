@@ -1,13 +1,19 @@
 const Product = require('../models/product.model')
 
 const adminGetProducts = async (req, res) => {
-  const products = await Product.fetchAllProducts()
+  try {
+    const products = await Product.findAll()
 
-  return res.render('admin/admin-product-list', {
-    products,
-    docTitle: 'Admin All Products',
-    path: '/admin/products',
-  })
+    if (!products) throw new Error()
+
+    return res.render('admin/admin-product-list', {
+      products,
+      docTitle: 'Admin All Products',
+      path: '/admin/products',
+    })
+  } catch (error) {
+    return res.send(`<h1>Error: ${error.message}</h1>`)
+  }
 }
 
 const getAddProductForm = async (req, res) => {
