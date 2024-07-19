@@ -46,9 +46,9 @@ const addToCart = async (req, res) => {
   const { id } = req.body
 
   Product.findById(id, (product) => {
-    if (product) {
-      Cart.addProduct(id, product.price)
-    }
+    if (!product) return res.send('<h1>Product not found</h1>')
+
+    Cart.addToCart(id, product.price)
   })
 
   return res.redirect(302, '/cart')
