@@ -1,12 +1,12 @@
 const { Product } = require('../models/product.model')
 
 const adminGetProducts = async (req, res) => {
-  Product.fetchAll((products) => {
-    return res.render('admin/admin-product-list', {
-      products,
-      docTitle: 'Admin All Products',
-      path: '/admin/products',
-    })
+  const products = await Product.fetchAllProducts()
+
+  return res.render('admin/admin-product-list', {
+    products,
+    docTitle: 'Admin All Products',
+    path: '/admin/products',
   })
 }
 
@@ -21,7 +21,7 @@ const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
 
   const product = new Product(title, imageUrl, description, +price)
-  product.save()
+  await product.save()
 
   return res.redirect('/admin/products')
 }
