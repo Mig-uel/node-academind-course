@@ -9,6 +9,8 @@ const methodOverride = require('method-override')
 const { sequelize } = require('./utils/db.utils')
 const Product = require('./models/product.models')
 const User = require('./models/user.models')
+const Cart = require('./models/cart.models')
+const CartItem = require('./models/cart-item.models')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -46,6 +48,10 @@ app.use(use404)
 // define relations
 Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' })
 User.hasMany(Product)
+User.hasOne(Cart)
+Cart.belongsTo(User)
+Cart.belongsToMany(Product, { through: CartItem })
+Product.belongsToMany(Cart, { through: CartItem })
 
 // sequelize sync and start express server
 const init = async () => {
@@ -59,6 +65,8 @@ const init = async () => {
     if (!user) {
       user = await User.create({ name: 'Admin', email: 'admin@email.com' })
     }
+
+    await user.createCart()
 
     // server
     app.listen(PORT, (req, res) => {
