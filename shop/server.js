@@ -4,6 +4,7 @@ const path = require('path')
 require('colors')
 const express = require('express')
 const methodOverride = require('method-override')
+const { sequelize } = require('./utils/db.utils')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -34,7 +35,20 @@ app.use(shopRouter)
 // 404
 app.use(use404)
 
-// server
-app.listen(PORT, (req, res) => {
-  console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
-})
+// sequelize sync
+const sync = async () => {
+  try {
+    const res = await sequelize.sync()
+
+    if (!res) throw new Error()
+
+    // server
+    app.listen(PORT, (req, res) => {
+      console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+sync()
