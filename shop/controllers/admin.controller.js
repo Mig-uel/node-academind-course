@@ -1,8 +1,10 @@
 const Product = require('../models/product.models')
 
 const adminGetProducts = async (req, res) => {
+  const { user } = req
+
   try {
-    const products = await Product.findAll()
+    const products = await user.getProducts()
 
     if (!products) throw new Error()
 
