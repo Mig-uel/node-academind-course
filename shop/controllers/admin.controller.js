@@ -20,7 +20,7 @@ const getAddProductForm = async (req, res) => {
 const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
 
-  const product = new Product(title, imageUrl, description, price)
+  const product = new Product(title, imageUrl, description, +price)
   product.save()
 
   return res.redirect('/admin/products')
@@ -53,11 +53,9 @@ const editProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const { id } = req.body
 
-  Product.findById(id, (product) => {
-    if (!product) return res.send('Product not found!')
+  Product.deleteById(id)
 
-    return res.send(`<h1>DELETED ID: ${product.id}</h1>`)
-  })
+  res.redirect('/admin/products')
 }
 
 module.exports = {
