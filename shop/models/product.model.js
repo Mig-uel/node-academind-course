@@ -15,17 +15,27 @@ const getProductsFromFile = (callback) => {
 }
 
 class Product {
-  constructor(title, imageUrl, description, price) {
+  constructor(title, imageUrl, description, price, id = v4()) {
     this.title = title
     this.imageUrl = imageUrl
     this.description = description
     this.price = price
+    this.id = id
   }
 
   save() {
-    this.id = v4()
     getProductsFromFile((products) => {
-      products.push(this)
+      const existingProduct = products.find((p) => p.id === this.id)
+
+      if (existingProduct) {
+        products = products.map((p) => {
+          if (p.id === existingProduct.id) return this
+          else return p
+        })
+      } else {
+        products.push(this)
+      }
+
       fs.writeFile(pathName, JSON.stringify(products), (err) =>
         console.log(err)
       )
