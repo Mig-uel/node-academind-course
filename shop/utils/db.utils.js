@@ -3,7 +3,9 @@ const { Sequelize } = require('sequelize')
 
 const sequelize = new Sequelize('shop', 'root', 'mysqladmin', {
   host: 'localhost',
-  dialect: 'mssql',
+  dialect: 'mysql',
+  port: 3306,
+  logging: false,
 })
 
 module.exports = { sequelize }
