@@ -25,13 +25,15 @@ const getAddProductForm = async (req, res) => {
 
 const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
+  const { user } = req
 
   try {
-    const product = await Product.create({
+    const product = await user.createProduct({
       title,
       price,
       imageUrl,
       description,
+      userId: user.id,
     })
 
     if (!product) throw new Error()
@@ -93,8 +95,6 @@ const deleteProduct = async (req, res) => {
   } catch (error) {
     return res.send(`<h1>${error}</h1>`)
   }
-
-  res.redirect('/admin/products')
 }
 
 module.exports = {
