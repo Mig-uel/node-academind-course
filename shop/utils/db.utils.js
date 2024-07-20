@@ -1,11 +1,18 @@
-const mysql = require('mysql2')
-const { Sequelize } = require('sequelize')
+const { MongoClient } = require('mongodb')
 
-const sequelize = new Sequelize('shop', 'root', 'mysqladmin', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: 3306,
-  logging: false,
-})
+// mongodb uri
+const uri = process.env.MONGO_URI
 
-module.exports = { sequelize }
+const client = new MongoClient(uri)
+
+const connectDB = async () => {
+  try {
+    const res = await client.connect()
+
+    return res
+  } finally {
+    await client.close()
+  }
+}
+
+module.exports = { connectDB }
