@@ -59,12 +59,7 @@ const editProduct = async (req, res) => {
   const { title, imageUrl, price, description, id } = req.body
 
   try {
-    const updatedProduct = await Product.fetchProductById(id)
-
-    updatedProduct.title = title
-    updatedProduct.imageUrl = imageUrl
-    updatedProduct.price = price
-    updatedProduct.description = description
+    const updatedProduct = new Product(title, price, description, imageUrl, id)
 
     await updatedProduct.save()
 
