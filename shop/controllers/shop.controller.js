@@ -1,5 +1,4 @@
 const { Product } = require('../models/product.models')
-const { Cart } = require('../models/cart.models')
 const { User } = require('../models/user.models')
 
 const getHome = async (req, res) => {
@@ -75,24 +74,16 @@ const addToCart = async (req, res) => {
   const { user } = req
 
   try {
-    const cart = await user.getCart()
-    const products = await cart.getProducts({ where: { id } })
+    const product = await Product.fetchProductById(id)
 
-    let product
-    if (products.length) {
-      product = products[0]
-    }
+    const userObj = new User(user.username, user.email, user._id, user.cart)
+
+    await userObj.addToCart(product)
+
+    return res.redirect(302, '/cart')
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    console.log(error)
   }
-
-  Product.findById(id, (product) => {
-    if (!product) return res.send('<h1>Product not found</h1>')
-
-    Cart.addToCart(id, product.price)
-  })
-
-  return res.redirect(302, '/cart')
 }
 
 const getOrders = async (req, res) => {
