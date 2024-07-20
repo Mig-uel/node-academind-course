@@ -1,5 +1,6 @@
 const { Product } = require('../models/product.models')
 const { Cart } = require('../models/cart.models')
+const { User } = require('../models/user.models')
 
 const getHome = async (req, res) => {
   try {
