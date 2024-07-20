@@ -2,12 +2,13 @@ const { ObjectId } = require('mongodb')
 const { connectDB } = require('../utils/db.utils')
 
 class Product {
-  constructor(title, price, description, imageUrl, id = null) {
+  constructor(title, price, description, imageUrl, id, userId) {
     this.title = title
     this.price = price
     this.description = description
     this.imageUrl = imageUrl
-    this._id = id ? ObjectId.createFromHexString(id) : id
+    this._id = id ? ObjectId.createFromHexString(id) : null
+    this._userId = userId || null
   }
 
   async save() {
