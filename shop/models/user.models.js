@@ -37,8 +37,6 @@ class User {
 
       const user = await db.collection('users').findOne({ _id: objectId })
 
-      console.log(user)
-
       return { user, error: null }
     } catch (error) {
       return { user: null, error }
