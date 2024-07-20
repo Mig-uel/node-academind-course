@@ -8,6 +8,7 @@ const methodOverride = require('method-override')
 
 // db
 const { connectDB } = require('./utils/db.utils')
+const { User } = require('./models/user.models')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -21,6 +22,12 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
+app.use(async (req, res, next) => {
+  const { user } = await User.findUserById('669bed8506fd67c0e553fca7')
+
+  req.user = user
+  next()
+})
 // app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
