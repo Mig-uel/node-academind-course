@@ -2,10 +2,12 @@
 const path = require('path')
 
 require('colors')
+require('dotenv').config()
 const express = require('express')
 const methodOverride = require('method-override')
 
 // db
+const { connectDB } = require('./utils/db.utils')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -19,10 +21,6 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
-app.use(async (req, res, next) => {
-  req.user = await User.findByPk(1)
-  next()
-})
 // app.use(express.static('public'))
 app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
@@ -43,9 +41,13 @@ app.use(use404)
 // start express server
 const init = async () => {
   try {
+    // connect to mongodb
+    const conn = await connectDB()
+
     // server
     app.listen(PORT, (req, res) => {
       console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
+      console.log(`CONNECTED TO MONGODB: `.green.inverse)
     })
   } catch (error) {
     console.log(error)
