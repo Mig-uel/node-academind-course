@@ -1,10 +1,8 @@
-const Product = require('../models/product.models')
+const { Product } = require('../models/product.models')
 
 const adminGetProducts = async (req, res) => {
-  const { user } = req
-
   try {
-    const products = await user.getProducts()
+    const products = await Product.fetchAllProducts()
 
     if (!products) throw new Error()
 
@@ -27,18 +25,11 @@ const getAddProductForm = async (req, res) => {
 
 const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
-  const { user } = req
 
   try {
-    const product = await user.createProduct({
-      title,
-      price,
-      imageUrl,
-      description,
-      userId: user.id,
-    })
+    const product = new Product(title, price, description, imageUrl)
 
-    if (!product) throw new Error()
+    await product.save()
 
     return res.redirect('/admin/products')
   } catch (error) {
@@ -65,7 +56,7 @@ const getEditProductForm = async (req, res) => {
 }
 
 const editProduct = async (req, res) => {
-  const { title, imageUrl, price, description, id } = req.body
+  const { title, imageUrl, price, description } = req.body
 
   try {
     const updatedProduct = await Product.findByPk(id)
