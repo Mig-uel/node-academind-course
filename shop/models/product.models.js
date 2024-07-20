@@ -55,6 +55,22 @@ class Product {
       console.log(error)
     }
   }
+
+  static async deleteByProductById(id) {
+    try {
+      const db = (await connectDB()).db()
+
+      const objectId = ObjectId.createFromHexString(id)
+
+      if (!ObjectId.isValid(objectId)) throw new Error()
+
+      const res = await db.collection('products').deleteOne({ _id: objectId })
+
+      return { product: res, error: null }
+    } catch (error) {
+      return { product: null, error }
+    }
+  }
 }
 
 module.exports = { Product }
