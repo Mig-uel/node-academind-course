@@ -42,12 +42,11 @@ app.use(use404)
 const init = async () => {
   try {
     // connect to mongodb
-    const conn = await connectDB()
+    await connectDB()
 
     // server
     app.listen(PORT, (req, res) => {
       console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
-      console.log(`CONNECTED TO MONGODB: `.green.inverse)
     })
   } catch (error) {
     console.log(error)
