@@ -73,11 +73,9 @@ const deleteProduct = async (req, res) => {
   const { id } = req.body
 
   try {
-    const product = await Product.findByPk(id)
+    const { product, error } = await Product.deleteByProductById(id)
 
-    if (!product) throw new Error()
-
-    await product.destroy()
+    if (error) throw new Error('Invalid Product ID')
 
     return res.redirect('/admin/products')
   } catch (error) {
