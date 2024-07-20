@@ -25,9 +25,10 @@ const getAddProductForm = async (req, res) => {
 
 const addProduct = async (req, res) => {
   const { title, imageUrl, description, price } = req.body
+  const { _id } = req.user
 
   try {
-    const product = new Product(title, price, description, imageUrl)
+    const product = new Product(title, price, description, imageUrl, null, _id)
 
     await product.save()
 
