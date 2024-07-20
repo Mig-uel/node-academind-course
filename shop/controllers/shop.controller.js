@@ -1,9 +1,9 @@
-const Product = require('../models/product.models')
+const { Product } = require('../models/product.models')
 const { Cart } = require('../models/cart.models')
 
 const getHome = async (req, res) => {
   try {
-    const products = await Product.findAll()
+    const products = await Product.fetchAllProducts()
 
     if (!products) throw new Error()
 
@@ -19,7 +19,7 @@ const getHome = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.findAll()
+    const products = await Product.fetchAllProducts()
 
     if (!products) throw new Error()
 
@@ -37,9 +37,7 @@ const getProduct = async (req, res) => {
   const { id } = req.params
 
   try {
-    const product = await Product.findByPk(id)
-
-    if (!product) throw new Error()
+    const product = await Product.fetchProductById(id)
 
     return res.render('shop/product-detail', {
       product,
@@ -83,8 +81,6 @@ const addToCart = async (req, res) => {
     if (products.length) {
       product = products[0]
     }
-
-    
   } catch (error) {
     return res.send(`<h1>${error}</h1>`)
   }
