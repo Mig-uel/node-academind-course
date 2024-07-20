@@ -41,7 +41,7 @@ const getEditProductForm = async (req, res) => {
   const { id } = req.params
 
   try {
-    const product = await Product.findByPk(id)
+    const product = await Product.fetchProductById(id)
 
     if (!product) throw new Error()
 
@@ -56,10 +56,10 @@ const getEditProductForm = async (req, res) => {
 }
 
 const editProduct = async (req, res) => {
-  const { title, imageUrl, price, description } = req.body
+  const { title, imageUrl, price, description, id } = req.body
 
   try {
-    const updatedProduct = await Product.findByPk(id)
+    const updatedProduct = await Product.fetchProductById(id)
 
     updatedProduct.title = title
     updatedProduct.imageUrl = imageUrl
