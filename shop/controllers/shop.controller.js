@@ -66,19 +66,19 @@ const getCart = async (req, res) => {
 }
 
 const addToCart = async (req, res) => {
-  const { id } = req.body
-  const { user } = req
-
   try {
-    const product = await Product.fetchProductById(id)
+    const { id } = req.body
+    const { user } = req
 
-    const userObj = new User(user.username, user.email, user._id, user.cart)
+    const product = await Product.findById(id)
+    if (!product) throw new Error('Product not found')
 
-    await userObj.addToCart(product)
+    await user.addToCart(product)
 
     return res.redirect(302, '/cart')
   } catch (error) {
     console.log(error)
+    return res.redirect('/products')
   }
 }
 
