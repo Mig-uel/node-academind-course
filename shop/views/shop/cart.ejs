@@ -10,9 +10,9 @@
   <main>
     <h1>Cart</h1>
 
-    <% if (cart.products.length) { %>
+    <% if (cart.length) { %>
     <ul>
-      <% cart.products.forEach(p => {%>
+      <% cart.forEach(p => {%>
       <p>
         <li><%= p.title %> (<%= p.qty %>)</li>
       <form action="/cart?_method=DELETE" method="POST">
