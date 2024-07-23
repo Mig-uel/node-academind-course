@@ -51,10 +51,6 @@ app.use('/', shopRouter)
 app.use(use404)
 
 mongoose.connection.once('open', () => {
-  console.log(
-    `CONNECTED TO MONGOOSE: ${mongoose.connection.name}`.green.inverse
-  )
-
   // start express server
   app.listen(port, () => {
     console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
