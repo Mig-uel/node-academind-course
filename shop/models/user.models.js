@@ -70,6 +70,32 @@ class User {
       return addItem
     } catch (error) {}
   }
+
+  async getCart() {
+    try {
+      const db = (await connectDB()).db()
+
+      const cartItemIdArray = this.cart.items.map((i) => i.productId)
+
+      // console.log(cartItemIdArray)
+
+      const cart = await db
+        .collection('products')
+        .find({ _id: { $in: cartItemIdArray } })
+        .toArray()
+
+      const fullCart = cart.map((i) => ({
+        ...i,
+        qty: this.cart.items.find(
+          (p) => i._id.toString() === p.productId.toString()
+        ).qty,
+      }))
+
+      return fullCart
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = { User }
