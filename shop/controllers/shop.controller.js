@@ -57,6 +57,8 @@ const getCart = async (req, res) => {
 
     const cart = await userObj.getCart()
 
+    console.log(cart)
+
     return res.render('shop/cart', {
       cart,
       docTitle: 'Cart',
@@ -91,6 +93,20 @@ const getOrders = async (req, res) => {
   })
 }
 
+const addOrder = async (req, res) => {
+  const { user } = req
+
+  try {
+    const userObj = new User(user.name, user.email, user._id, user.cart)
+
+    await userObj.addOrder()
+
+    return res.redirect('/orders')
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 const getCheckout = async (req, res) => {
   return res.render('shop/checkout', {
     docTitle: 'Checkout',
@@ -119,6 +135,7 @@ module.exports = {
   getCart,
   addToCart,
   getOrders,
+  addOrder,
   getCheckout,
   removeFromCart,
 }
