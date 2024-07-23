@@ -77,8 +77,6 @@ class User {
 
       const cartItemIdArray = this.cart.items.map((i) => i.productId)
 
-      // console.log(cartItemIdArray)
-
       const cart = await db
         .collection('products')
         .find({ _id: { $in: cartItemIdArray } })
@@ -92,6 +90,21 @@ class User {
       }))
 
       return fullCart
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  async deleteItemFromCart(id) {
+    try {
+      this.cart.items = this.cart.items.filter(
+        (item) => item.productId.toString() !== id.toString()
+      )
+
+      const db = (await connectDB()).db()
+      await db
+        .collection('users')
+        .updateOne({ _id: this._id }, { $set: { cart: this.cart } })
     } catch (error) {
       console.log(error)
     }
