@@ -2,7 +2,8 @@ const Product = require('../models/product.models')
 
 const adminGetProducts = async (req, res) => {
   try {
-    const products = await Product.find({})
+    const { user } = req
+    const products = await Product.find({ userId: user })
 
     return res.render('admin/admin-product-list', {
       products,
