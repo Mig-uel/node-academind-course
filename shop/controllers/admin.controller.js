@@ -40,12 +40,11 @@ const addProduct = async (req, res) => {
 }
 
 const getEditProductForm = async (req, res) => {
-  const { id } = req.params
-
   try {
-    const product = await Product.fetchProductById(id)
+    const { id } = req.params
+    const product = await Product.findById(id)
 
-    if (!product) throw new Error()
+    if (!product) throw new Error('Product not found')
 
     return res.render('admin/edit-product', {
       product,
@@ -53,35 +52,42 @@ const getEditProductForm = async (req, res) => {
       path: '/admin/products',
     })
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    console.log(error.message)
+    return res.redirect('/admin/products')
   }
 }
 
 const editProduct = async (req, res) => {
-  const { title, imageUrl, price, description, id } = req.body
-
   try {
-    const updatedProduct = new Product(title, price, description, imageUrl, id)
+    const { id } = req.params
+    const { title, imageUrl, price, description } = req.body
 
-    await updatedProduct.save()
+    if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
+      throw new Error('All fields all required')
+
+    await Product.findByIdAndUpdate(id, { title, imageUrl, price, description })
 
     return res.redirect(`/admin/products`)
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    const { id } = req.params
+
+    console.log(error.message)
+    return res.redirect(`/admin/edit/${id}`)
   }
 }
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.body
-
   try {
-    const { product, error } = await Product.deleteByProductById(id)
+    const { id } = req.body
 
-    if (error) throw new Error('Invalid Product ID')
+    const deletedProduct = await Product.findByIdAndDelete(id)
+
+    if (!deletedProduct) throw new Error('Product not found')
 
     return res.redirect('/admin/products')
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    console.log(error.message)
+    return res.redirect('/admin/products')
   }
 }
 
