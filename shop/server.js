@@ -7,7 +7,7 @@ const express = require('express')
 const methodOverride = require('method-override')
 
 // db
-const { connectDB } = require('./utils/db.utils')
+const { db } = require('./utils/db.utils')
 const { User } = require('./models/user.models')
 
 // router
@@ -16,7 +16,7 @@ const { shopRouter } = require('./routes/shop.routes')
 const { use404 } = require('./controllers/error.controller')
 
 // config
-const PORT = 3000
+const port = process.env.PORT || 4000
 const app = express()
 app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
@@ -49,11 +49,11 @@ app.use(use404)
 const init = async () => {
   try {
     // connect to mongodb
-    await connectDB()
+    await db()
 
     // server
-    app.listen(PORT, (req, res) => {
-      console.log(`SERVER RUNNING ON PORT: ${PORT}`.green.inverse)
+    app.listen(port, () => {
+      console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
     })
   } catch (error) {
     console.log(error)
