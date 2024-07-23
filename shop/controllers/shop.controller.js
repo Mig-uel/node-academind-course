@@ -57,8 +57,6 @@ const getCart = async (req, res) => {
 
     const cart = await userObj.getCart()
 
-    console.log(cart)
-
     return res.render('shop/cart', {
       cart,
       docTitle: 'Cart',
@@ -88,6 +86,7 @@ const addToCart = async (req, res) => {
 
 const getOrders = async (req, res) => {
   return res.render('shop/orders', {
+    orders: [],
     docTitle: 'Orders',
     path: '/orders',
   })
