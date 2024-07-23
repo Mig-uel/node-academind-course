@@ -85,11 +85,21 @@ const addToCart = async (req, res) => {
 }
 
 const getOrders = async (req, res) => {
-  return res.render('shop/orders', {
-    orders: [],
-    docTitle: 'Orders',
-    path: '/orders',
-  })
+  const { user } = req
+  try {
+    const userObj = new User(user.name, user.email, user._id, user.cart)
+    const orders = await userObj.getOrders()
+
+    console.log(orders)
+
+    return res.render('shop/orders', {
+      orders,
+      docTitle: 'Orders',
+      path: '/orders',
+    })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const addOrder = async (req, res) => {
