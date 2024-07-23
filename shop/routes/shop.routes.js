@@ -7,6 +7,7 @@ const {
   getCart,
   addToCart,
   getOrders,
+  addOrder,
   getCheckout,
   getProduct,
   removeFromCart,
@@ -17,6 +18,6 @@ shopRouter.route('/products').get(getProducts)
 shopRouter.route('/products/:id').get(getProduct)
 shopRouter.route('/cart').get(getCart).post(addToCart).delete(removeFromCart)
 shopRouter.route('/checkout').get(getCheckout)
-shopRouter.route('/orders').get(getOrders)
+shopRouter.route('/orders').get(getOrders).post(addOrder)
 
 module.exports = { shopRouter }
