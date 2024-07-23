@@ -90,8 +90,6 @@ const getOrders = async (req, res) => {
     const userObj = new User(user.name, user.email, user._id, user.cart)
     const orders = await userObj.getOrders()
 
-    console.log(orders)
-
     return res.render('shop/orders', {
       orders,
       docTitle: 'Orders',
