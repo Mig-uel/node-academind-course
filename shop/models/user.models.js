@@ -109,6 +109,24 @@ class User {
       console.log(error)
     }
   }
+
+  async addOrder() {
+    try {
+      const db = (await connectDB()).db()
+
+      const res = await db.collection('orders').insertOne(this.cart)
+
+      // update local and server cart
+      await db
+        .collection('users')
+        .updateOne({ _id: this._id }, { $set: { cart: { items: [] } } })
+      this.cart = { items: [] }
+
+      return
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = { User }
