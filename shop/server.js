@@ -1,9 +1,12 @@
 // core modules
 const path = require('path')
 
+// dev
 require('colors')
 require('dotenv').config()
+
 const express = require('express')
+const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 
 // db
@@ -16,8 +19,11 @@ const { shopRouter } = require('./routes/shop.routes')
 const { use404 } = require('./controllers/error.controller')
 
 // config
-const port = process.env.PORT || 4000
 const app = express()
+const port = process.env.PORT || 4000
+db()
+
+// express setup
 app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
@@ -28,8 +34,7 @@ app.use(async (req, res, next) => {
   req.user = user
   next()
 })
-// app.use(express.static('public'))
-app.use(express.static(path.join(__dirname, 'public'))) // server static files/grant access (public folder)
+app.use(express.static('public')) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
 app.use((req, res, next) => {
   console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow)
@@ -40,24 +45,22 @@ app.use(express.json()) // parse json data
 
 // routes
 app.use('/admin', adminRouter)
-app.use(shopRouter)
+app.use('/', shopRouter)
 
 // 404
 app.use(use404)
 
-// start express server
-const init = async () => {
-  try {
-    // connect to mongodb
-    await db()
+mongoose.connection.once('open', () => {
+  console.log(
+    `CONNECTED TO MONGOOSE: ${mongoose.connection.name}`.green.inverse
+  )
 
-    // server
-    app.listen(port, () => {
-      console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
-    })
-  } catch (error) {
-    console.log(error)
-  }
-}
+  // start express server
+  app.listen(port, () => {
+    console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
+  })
+})
 
-init()
+mongoose.connection.on('error', (error) => {
+  console.log(error)
+})
