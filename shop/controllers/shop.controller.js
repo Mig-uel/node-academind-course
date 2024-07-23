@@ -32,10 +32,9 @@ const getProducts = async (req, res) => {
 }
 
 const getProduct = async (req, res) => {
-  const { id } = req.params
-
   try {
-    const product = await Product.fetchProductById(id)
+    const { id } = req.params
+    const product = await Product.findById(id)
 
     return res.render('shop/product-detail', {
       product,
@@ -43,7 +42,8 @@ const getProduct = async (req, res) => {
       path: '/products',
     })
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    console.log(error)
+    return res.redirect('/products')
   }
 }
 
