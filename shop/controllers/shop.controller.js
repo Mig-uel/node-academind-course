@@ -1,11 +1,9 @@
-const { Product } = require('../models/product.models')
+const Product = require('../models/product.models')
 const { User } = require('../models/user.models')
 
 const getHome = async (req, res) => {
   try {
-    const products = await Product.fetchAllProducts()
-
-    if (!products) throw new Error()
+    const products = await Product.find({})
 
     return res.render('shop/index', {
       products,
@@ -13,15 +11,14 @@ const getHome = async (req, res) => {
       path: '/',
     })
   } catch (error) {
-    return res.send(`<h1>Error: ${error}</h1>`)
+    console.log(error.message)
+    return res.redirect('/')
   }
 }
 
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.fetchAllProducts()
-
-    if (!products) throw new Error()
+    const products = await Product.find({})
 
     return res.render('shop/product-list', {
       products,
@@ -29,7 +26,8 @@ const getProducts = async (req, res) => {
       path: '/products',
     })
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    console.log(error.message)
+    return res.redirect('/products')
   }
 }
 
