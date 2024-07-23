@@ -53,14 +53,12 @@ const getCart = async (req, res) => {
   const { user } = req
 
   try {
-    const cart = await user.getCart()
+    const userObj = new User(user.name, user.email, user._id, user.cart)
 
-    if (!cart) throw new Error()
-
-    const products = await cart.getProducts()
+    const cart = await userObj.getCart()
 
     return res.render('shop/cart', {
-      cart: { products },
+      cart,
       docTitle: 'Cart',
       path: '/cart',
     })
