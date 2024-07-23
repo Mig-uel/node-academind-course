@@ -23,12 +23,19 @@ const getAddProductForm = async (req, res) => {
 
 const addProduct = async (req, res) => {
   try {
+    const { user } = req
     const { title, imageUrl, description, price } = req.body
 
     if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
       throw new Error('All fields all required')
 
-    const product = new Product({ title, price, description, imageUrl })
+    const product = new Product({
+      title,
+      price,
+      description,
+      imageUrl,
+      userId: user,
+    })
 
     await product.save()
 
