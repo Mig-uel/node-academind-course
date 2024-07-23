@@ -98,16 +98,18 @@ const getCheckout = async (req, res) => {
   })
 }
 
-const removeFromCart = (req, res) => {
+const removeFromCart = async (req, res) => {
   const { id } = req.body
+  const { user } = req
 
-  Product.findById(id, (product) => {
-    if (!product) return res.send('<h1>Product not found</h1>')
-
-    Cart.deleteFromCart(id, product.price)
+  try {
+    const userObj = new User(user.username, user.email, user._id, user.cart)
+    await userObj.deleteItemFromCart(id)
 
     return res.redirect('/cart')
-  })
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 module.exports = {
