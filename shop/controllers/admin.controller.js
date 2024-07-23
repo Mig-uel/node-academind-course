@@ -1,10 +1,8 @@
-const { Product } = require('../models/product.models')
+const Product = require('../models/product.models')
 
 const adminGetProducts = async (req, res) => {
   try {
-    const products = await Product.fetchAllProducts()
-
-    if (!products) throw new Error()
+    const products = await Product.find({})
 
     return res.render('admin/admin-product-list', {
       products,
@@ -12,7 +10,7 @@ const adminGetProducts = async (req, res) => {
       path: '/admin/products',
     })
   } catch (error) {
-    return res.send(`<h1>Error: ${error.message}</h1>`)
+    console.log(error)
   }
 }
 
@@ -24,17 +22,20 @@ const getAddProductForm = async (req, res) => {
 }
 
 const addProduct = async (req, res) => {
-  const { title, imageUrl, description, price } = req.body
-  const { _id } = req.user
-
   try {
-    const product = new Product(title, price, description, imageUrl, null, _id)
+    const { title, imageUrl, description, price } = req.body
+
+    if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
+      throw new Error('All fields all required')
+
+    const product = new Product({ title, price, description, imageUrl })
 
     await product.save()
 
     return res.redirect('/admin/products')
   } catch (error) {
-    return res.send(`Error: ${error.message}`)
+    console.log(error.message)
+    return res.redirect('/admin/products/add')
   }
 }
 
