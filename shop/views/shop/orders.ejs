@@ -1,15 +1,26 @@
-<!-- Head Partial -->
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/styles/product.css">
+<link rel="stylesheet" href="/styles/orders.css">
 </head>
 
 <body>
-  <!-- Navigation Partial -->
   <%- include('../includes/navigation.ejs') %>
-
   <main>
-    <h1>Orders</h1>
-  </main>
+    <% if (orders.length) { %>
 
-  <!-- End Partial -->
+    <ul class="orders">
+      <% orders.forEach(order => { %>
+      <li class="orders__item">
+        <h1>Order - # <%= order._id %></h1>
+        <ul class="orders__products">
+          <% order.products.forEach(product => { %>
+          <li class="orders__products-item"><%= product.title %> (<%= product.orderItem.quantity %>)</li>
+          <% }); %>
+        </ul>
+      </li>
+      <% }); %>
+    </ul>
+    <% } else { %>
+    <h1>Nothing there!</h1>
+    <% } %>
+  </main>
   <%- include('../includes/end.ejs') %>
