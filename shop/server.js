@@ -11,7 +11,7 @@ const methodOverride = require('method-override')
 
 // db
 const { db } = require('./utils/db.utils')
-const { User } = require('./models/user.models')
+const User = require('./models/user.models')
 
 // router
 const { adminRouter } = require('./routes/admin.routes')
@@ -29,7 +29,7 @@ app.set('views', 'views') // already default, just example
 
 // middleware
 app.use(async (req, res, next) => {
-  const { user } = await User.findUserById('669bed8506fd67c0e553fca7')
+  const user = await User.findById('66a02ed53e6b9281c2e26289')
 
   req.user = user
   next()
@@ -52,7 +52,7 @@ app.use(use404)
 
 mongoose.connection.once('open', () => {
   // start express server
-  app.listen(port, () => {
+  app.listen(port, async () => {
     console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
   })
 })
