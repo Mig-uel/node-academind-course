@@ -135,8 +135,13 @@ class User {
   async getOrders() {
     try {
       const db = (await connectDB()).db()
-      return await db.collection('orders')
-    } catch (error) {}
+      return await db
+        .collection('orders')
+        .find({ 'user._id': this._id })
+        .toArray()
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 
