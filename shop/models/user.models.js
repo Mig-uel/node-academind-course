@@ -113,8 +113,12 @@ class User {
   async addOrder() {
     try {
       const db = (await connectDB()).db()
+      const cart = await this.getCart()
 
-      const res = await db.collection('orders').insertOne(this.cart)
+      const order = await db.collection('orders').insertOne({
+        items: cart,
+        user: { _id: this._id, name: this.name },
+      })
 
       // update local and server cart
       await db
@@ -126,6 +130,13 @@ class User {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  async getOrders() {
+    try {
+      const db = (await connectDB()).db()
+      return await db.collection('orders')
+    } catch (error) {}
   }
 }
 
