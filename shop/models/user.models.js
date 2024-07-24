@@ -47,4 +47,14 @@ UserSchema.methods.addToCart = async function (product) {
   await this.save()
 }
 
+UserSchema.methods.getCart = async function () {
+  const populatedCart = await this.cart.populate('items.productId')
+
+  const cart = populatedCart.items.map((i) => {
+    return { ...i.productId._doc, qty: i.qty }
+  })
+
+  return cart
+}
+
 module.exports = mongoose.model('User', UserSchema)
