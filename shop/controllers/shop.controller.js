@@ -81,10 +81,10 @@ const addToCart = async (req, res) => {
 }
 
 const getOrders = async (req, res) => {
-  const { user } = req
   try {
-    const userObj = new User(user.name, user.email, user._id, user.cart)
-    const orders = await userObj.getOrders()
+    const { user } = req
+
+    const orders = await user.getOrders()
 
     return res.render('shop/orders', {
       orders,
@@ -97,12 +97,10 @@ const getOrders = async (req, res) => {
 }
 
 const addOrder = async (req, res) => {
-  const { user } = req
-
   try {
-    const userObj = new User(user.name, user.email, user._id, user.cart)
+    const { user } = req
 
-    await userObj.addOrder()
+    await user.createOrder()
 
     return res.redirect('/orders')
   } catch (error) {
@@ -123,7 +121,7 @@ const removeFromCart = async (req, res) => {
     const { user } = req
 
     await user.removeFromCart(id)
-    
+
     return res.redirect('/cart')
   } catch (error) {
     console.log(error)
