@@ -12,7 +12,7 @@
       <li class="orders__item">
         <h1>Order - # <%= order._id %></h1>
         <ul class="orders__products">
-          <% order.items.forEach(item => { %>
+          <% order.products.forEach(item => { %>
           <li class="orders__products-item"><%= item.title %> (<%= item.qty %>)</li>
           <% }); %>
         </ul>
@@ -20,7 +20,7 @@
       <% }); %>
     </ul>
     <% } else { %>
-    <h1>Nothing there!</h1>
+    <h1>No orders yet</h1>
     <% } %>
   </main>
   <%- include('../includes/end.ejs') %>
