@@ -8,6 +8,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
+const cookieParser = require('cookie-parser')
 
 // db
 const { db } = require('./utils/db.utils')
@@ -29,6 +30,7 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
+app.use(cookieParser())
 app.use(async (req, res, next) => {
   const user = await User.findById('66a02ed53e6b9281c2e26289')
 
