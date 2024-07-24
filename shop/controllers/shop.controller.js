@@ -1,5 +1,5 @@
 const Product = require('../models/product.models')
-const { User } = require('../models/user.models')
+const User = require('../models/user.models')
 
 const getHome = async (req, res) => {
   try {
@@ -48,12 +48,10 @@ const getProduct = async (req, res) => {
 }
 
 const getCart = async (req, res) => {
-  const { user } = req
-
   try {
-    const userObj = new User(user.name, user.email, user._id, user.cart)
+    const { user } = req
 
-    const cart = await userObj.getCart()
+    const cart = await user.getCart()
 
     return res.render('shop/cart', {
       cart,
