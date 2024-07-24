@@ -118,16 +118,16 @@ const getCheckout = async (req, res) => {
 }
 
 const removeFromCart = async (req, res) => {
-  const { id } = req.body
-  const { user } = req
-
   try {
-    const userObj = new User(user.username, user.email, user._id, user.cart)
-    await userObj.deleteItemFromCart(id)
+    const { id } = req.body
+    const { user } = req
 
+    await user.removeFromCart(id)
+    
     return res.redirect('/cart')
   } catch (error) {
     console.log(error)
+    return res.redirect('/cart')
   }
 }
 
