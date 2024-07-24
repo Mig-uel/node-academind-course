@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Order = require('./order.models')
 
 const UserSchema = new mongoose.Schema(
   {
@@ -65,6 +66,34 @@ UserSchema.methods.removeFromCart = async function (id) {
   await this.save()
 
   return
+}
+
+UserSchema.methods.createOrder = async function () {
+  const products = await this.cart.populate(
+    'items.productId',
+    'title price description imageUrl'
+  )
+  const populatedProducts = products.items.map((i) => ({
+    ...i.productId._doc,
+    qty: i.qty,
+  }))
+
+  const orderObj = { products: populatedProducts, user: this._id }
+
+  const order = new Order(orderObj)
+
+  await order.save()
+
+  this.cart = { items: [] }
+  await this.save()
+
+  return
+}
+
+UserSchema.methods.getOrders = async function () {
+  const orders = await Order.find({ user: this._id }).lean()
+
+  return orders
 }
 
 module.exports = mongoose.model('User', UserSchema)
