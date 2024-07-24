@@ -16,6 +16,7 @@ const User = require('./models/user.models')
 // router
 const { adminRouter } = require('./routes/admin.routes')
 const { shopRouter } = require('./routes/shop.routes')
+const { authRouter } = require('./routes/auth.routes')
 const { use404 } = require('./controllers/error.controller')
 
 // config
@@ -43,7 +44,8 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true })) // parse form data
 app.use(express.json()) // parse json data
 
-// routes
+// routes\
+app.use('/auth', authRouter)
 app.use('/admin', adminRouter)
 app.use('/', shopRouter)
 
