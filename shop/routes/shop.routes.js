@@ -1,5 +1,4 @@
-const path = require('path')
-
+// controllers
 const shopRouter = require('express').Router()
 const {
   getHome,
