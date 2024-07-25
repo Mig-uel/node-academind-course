@@ -25,8 +25,10 @@ const login = async (req, res) => {
     }
 
     const checkPassword = await bcrypt.compare(password, user.password)
-
-    if (!checkPassword) return res.redirect('/auth/login')
+    if (!checkPassword) {
+      req.flash('error', 'Invalid email or password')
+      return res.redirect('/auth/login')
+    }
 
     req.session.user = user
     req.session.authorized = true
@@ -57,6 +59,7 @@ const getSignUp = async (req, res) => {
     path: '/signup',
     docTitle: 'Sign Up',
     isAuthenticated: req.session.user,
+    error: req.flash('error'),
   })
 }
 const signup = async (req, res) => {
@@ -64,7 +67,10 @@ const signup = async (req, res) => {
     const { email, password, confirmPassword } = req.body
 
     const userExists = await User.findOne({ email })
-    if (userExists) return res.redirect('/auth/signup')
+    if (userExists) {
+      req.flash('error', 'Email is already in use')
+      return res.redirect('/auth/signup')
+    }
 
     const user = new User({ email, password, cart: { items: [] } })
     await user.save()
