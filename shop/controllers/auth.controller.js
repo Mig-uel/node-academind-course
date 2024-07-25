@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const User = require('../models/user.models')
+const { sendMail } = require('../utils/email.utils')
 
 const getLogin = async (req, res) => {
   if (req.session.authorized) {
@@ -77,6 +78,12 @@ const signup = async (req, res) => {
 
     req.session.user = user
     req.session.authorized = true
+
+    sendMail(
+      user.email,
+      'Account Created',
+      `Your account ${user.email} has been successfully created!`
+    )
 
     return res.redirect('/')
   } catch (error) {
