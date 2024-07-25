@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "cookie-parser": "^1.4.6",
+    "express-session": "^1.18.0",
     "method-override": "^3.0.0",
     "mongoose": "^8.5.1"
   },
