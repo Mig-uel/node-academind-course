@@ -73,7 +73,7 @@ const getCart = async (req, res) => {
 const addToCart = async (req, res) => {
   try {
     const { id } = req.body
-    const { user } = req
+    const { user } = req.session
 
     const product = await Product.findById(id)
     if (!product) throw new Error('Product not found')
@@ -111,7 +111,7 @@ const getOrders = async (req, res) => {
 
 const addOrder = async (req, res) => {
   try {
-    const { user } = req
+    const { user } = req.session
 
     await user.createOrder()
 
@@ -134,7 +134,7 @@ const getCheckout = async (req, res) => {
 const removeFromCart = async (req, res) => {
   try {
     const { id } = req.body
-    const { user } = req
+    const { user } = req.session
 
     await user.removeFromCart(id)
 
