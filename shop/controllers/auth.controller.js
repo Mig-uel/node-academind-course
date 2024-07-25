@@ -10,6 +10,7 @@ const getLogin = async (req, res) => {
     path: '/login',
     docTitle: 'Login',
     isAuthenticated: req.session.user,
+    error: req.flash('error'),
   })
 }
 
@@ -18,7 +19,10 @@ const login = async (req, res) => {
     const { email, password } = req.body
     const user = await User.findOne({ email })
 
-    if (!user) throw new Error('No user found')
+    if (!user) {
+      req.flash('error', 'Invalid email or password')
+      return res.redirect('/auth/login')
+    }
 
     const checkPassword = await bcrypt.compare(password, user.password)
 
