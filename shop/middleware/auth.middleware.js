@@ -1,7 +1,6 @@
 const isAuthenticated = async (req, res, next) => {
-  if (req.user) return next()
+  if (req.session.user) return next()
   else {
-    console.log('Not authorized')
     return res.redirect('/auth/login')
   }
 }
