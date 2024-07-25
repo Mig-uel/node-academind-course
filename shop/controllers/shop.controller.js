@@ -9,6 +9,7 @@ const getHome = async (req, res) => {
       products,
       docTitle: 'Home',
       path: '/',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error.message)
@@ -24,6 +25,7 @@ const getProducts = async (req, res) => {
       products,
       docTitle: 'All Products',
       path: '/products',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error.message)
@@ -40,6 +42,7 @@ const getProduct = async (req, res) => {
       product,
       docTitle: product.title,
       path: '/products',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error)
@@ -49,14 +52,18 @@ const getProduct = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    const { user } = req
+    let cart = []
 
-    const cart = await user.getCart()
+    if (req.session.user) {
+      const user = new User().init(req.session.user)
+      cart = await user.getCart()
+    }
 
     return res.render('shop/cart', {
       cart,
       docTitle: 'Cart',
       path: '/cart',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     return res.send(`<h1>${error}</h1>`)
@@ -82,17 +89,23 @@ const addToCart = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const { user } = req
+    let orders = []
 
-    const orders = await user.getOrders()
+    if (req.session.user) {
+      const user = new User().init(req.session.user)
+
+      orders = await user.getOrders()
+    }
 
     return res.render('shop/orders', {
       orders,
       docTitle: 'Orders',
       path: '/orders',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error)
+    return res.send(`<h1>${error}</h1>`)
   }
 }
 
@@ -114,7 +127,7 @@ const getCheckout = async (req, res) => {
   return res.render('shop/checkout', {
     docTitle: 'Checkout',
     path: '/checkout',
-    isAuthenticated: loggedIn,
+    isAuthenticated: req.session.user,
   })
 }
 
