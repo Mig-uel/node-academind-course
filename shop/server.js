@@ -9,6 +9,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 
 // db
 const { db } = require('./utils/db.utils')
@@ -23,6 +24,10 @@ const { use404 } = require('./controllers/error.controller')
 // config
 const app = express()
 const port = process.env.PORT || 4000
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URI,
+  collection: 'sessions',
+})
 db()
 
 // express setup
@@ -39,6 +44,7 @@ app.use(
     cookie: {
       sameSite: 'strict',
     },
+    store,
   })
 )
 app.use(async (req, res, next) => {
