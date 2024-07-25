@@ -2,13 +2,14 @@ const Product = require('../models/product.models')
 
 const adminGetProducts = async (req, res) => {
   try {
-    const { user } = req
+    const { user } = req.session
     const products = await Product.find({ userId: user })
 
     return res.render('admin/admin-product-list', {
       products,
       docTitle: 'Admin All Products',
       path: '/admin/products',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error)
@@ -19,12 +20,13 @@ const getAddProductForm = async (req, res) => {
   return res.status(200).render('admin/add-product', {
     docTitle: 'Add Product',
     path: '/admin/products/add',
+    isAuthenticated: req.session.user,
   })
 }
 
 const addProduct = async (req, res) => {
   try {
-    const { user } = req
+    const { user } = req.session
     const { title, imageUrl, description, price } = req.body
 
     if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
@@ -58,6 +60,7 @@ const getEditProductForm = async (req, res) => {
       product,
       docTitle: `Edit ${product.title}`,
       path: '/admin/products',
+      isAuthenticated: req.session.user,
     })
   } catch (error) {
     console.log(error.message)
