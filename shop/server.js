@@ -47,12 +47,6 @@ app.use(
     store,
   })
 )
-app.use(async (req, res, next) => {
-  const user = await User.findById('66a02ed53e6b9281c2e26289')
-
-  req.user = user
-  next()
-})
 app.use(express.static('public')) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
 app.use((req, res, next) => {
