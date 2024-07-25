@@ -4,13 +4,11 @@ const adminGetProducts = async (req, res) => {
   try {
     const { user } = req
     const products = await Product.find({ userId: user })
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('admin/admin-product-list', {
       products,
       docTitle: 'Admin All Products',
       path: '/admin/products',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error)
@@ -18,12 +16,9 @@ const adminGetProducts = async (req, res) => {
 }
 
 const getAddProductForm = async (req, res) => {
-  const loggedIn = req.cookies.loggedIn
-
   return res.status(200).render('admin/add-product', {
     docTitle: 'Add Product',
     path: '/admin/products/add',
-    isAuthenticated: loggedIn,
   })
 }
 
@@ -56,7 +51,6 @@ const getEditProductForm = async (req, res) => {
   try {
     const { id } = req.params
     const product = await Product.findById(id)
-    const loggedIn = req.cookies.loggedIn
 
     if (!product) throw new Error('Product not found')
 
@@ -64,7 +58,6 @@ const getEditProductForm = async (req, res) => {
       product,
       docTitle: `Edit ${product.title}`,
       path: '/admin/products',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error.message)
