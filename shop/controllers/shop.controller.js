@@ -52,12 +52,9 @@ const getProduct = async (req, res) => {
 
 const getCart = async (req, res) => {
   try {
-    let cart = []
+    const { user } = req.session
 
-    if (req.session.user) {
-      const user = new User().init(req.session.user)
-      cart = await user.getCart()
-    }
+    const cart = await user.getCart()
 
     return res.render('shop/cart', {
       cart,
@@ -89,13 +86,9 @@ const addToCart = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    let orders = []
+    const { user } = req.session
 
-    if (req.session.user) {
-      const user = new User().init(req.session.user)
-
-      orders = await user.getOrders()
-    }
+    const orders = await user.getOrders()
 
     return res.render('shop/orders', {
       orders,
@@ -122,8 +115,6 @@ const addOrder = async (req, res) => {
 }
 
 const getCheckout = async (req, res) => {
-  const loggedIn = req.cookies.loggedIn
-
   return res.render('shop/checkout', {
     docTitle: 'Checkout',
     path: '/checkout',
