@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
+const { hydrateUser } = require('./middleware/auth.middleware')
 
 // db
 const { db } = require('./utils/db.utils')
@@ -47,6 +48,7 @@ app.use(
     store,
   })
 )
+app.use(hydrateUser)
 app.use(express.static('public')) // server static files/grant access (public folder)
 app.use(methodOverride('_method'))
 app.use((req, res, next) => {
