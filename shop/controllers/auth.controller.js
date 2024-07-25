@@ -34,4 +34,17 @@ const logout = async (req, res) => {
   }
 }
 
-module.exports = { getLogin, login, logout }
+const getSignUp = async (req, res) => {
+  if (req.session.authorized) {
+    return res.redirect('/')
+  }
+
+  return res.render('auth/signup', {
+    path: '/signup',
+    docTitle: 'Sign Up',
+    isAuthenticated: req.session.user,
+  })
+}
+const signup = async (req, res) => {}
+
+module.exports = { getLogin, login, logout, getSignUp, signup }
