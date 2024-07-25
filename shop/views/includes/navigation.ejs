@@ -16,26 +16,19 @@
         <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
       </li>
 
-      <% if (isAuthenticated) {%>
-      <li class="main-header__item">
+      <!-- <li class="main-header__item">
         <a class="<%= path === '/admin/products/add' ? 'active' : '' %>" href="/admin/products/add">Add Product
         </a>
       </li>
       <li class="main-header__item">
         <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
         </a>
-      </li>
-      <% } %>
+      </li> -->
+
     </ul>
     <ul class="main-header__item-list">
       <li class="main-header__item">
-        <% if (isAuthenticated) { %>
-        <form action="/auth/logout" method="POST">
-          <button type="submit" class="btn <%= path === '/login' ? 'active' : '' %>" href="/auth/logout">Logout</button>
-        </form>
-        <% } else { %>
         <a class="<%= path === '/login' ? 'active' : '' %>" href="/auth/login">Login</a>
-        <% } %>
       </li>
     </ul>
   </nav>
