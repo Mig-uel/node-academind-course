@@ -16,19 +16,21 @@
         <a class="<%= path === '/orders' ? 'active' : '' %>" href="/orders">Orders</a>
       </li>
 
-      <!-- <li class="main-header__item">
+      <% if (isAuthenticated) { %>
+      <li class="main-header__item">
         <a class="<%= path === '/admin/products/add' ? 'active' : '' %>" href="/admin/products/add">Add Product
         </a>
       </li>
       <li class="main-header__item">
         <a class="<%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products">Admin Products
         </a>
-      </li> -->
-
+      </li>
+      <% } %>
     </ul>
     <ul class="main-header__item-list">
       <li class="main-header__item">
-        <a class="<%= path === '/login' ? 'active' : '' %>" href="/auth/login">Login</a>
+        <a class="<%= path === '/login' ? 'active' : '' %>"
+          href="<%= isAuthenticated ? '/auth/logout' : '/auth/login' %>"><%= isAuthenticated ? 'Logout' : 'Login'%></a>
       </li>
     </ul>
   </nav>
