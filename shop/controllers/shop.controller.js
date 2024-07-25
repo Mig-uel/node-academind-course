@@ -4,13 +4,11 @@ const User = require('../models/user.models')
 const getHome = async (req, res) => {
   try {
     const products = await Product.find({})
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('shop/index', {
       products,
       docTitle: 'Home',
       path: '/',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error.message)
@@ -21,13 +19,11 @@ const getHome = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const products = await Product.find({})
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('shop/product-list', {
       products,
       docTitle: 'All Products',
       path: '/products',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error.message)
@@ -39,13 +35,11 @@ const getProduct = async (req, res) => {
   try {
     const { id } = req.params
     const product = await Product.findById(id)
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('shop/product-detail', {
       product,
       docTitle: product.title,
       path: '/products',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error)
@@ -58,13 +52,11 @@ const getCart = async (req, res) => {
     const { user } = req
 
     const cart = await user.getCart()
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('shop/cart', {
       cart,
       docTitle: 'Cart',
       path: '/cart',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     return res.send(`<h1>${error}</h1>`)
@@ -93,13 +85,11 @@ const getOrders = async (req, res) => {
     const { user } = req
 
     const orders = await user.getOrders()
-    const loggedIn = req.cookies.loggedIn
 
     return res.render('shop/orders', {
       orders,
       docTitle: 'Orders',
       path: '/orders',
-      isAuthenticated: loggedIn,
     })
   } catch (error) {
     console.log(error)

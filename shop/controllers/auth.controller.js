@@ -1,16 +1,17 @@
 const getLogin = async (req, res) => {
-  const loggedIn = req.cookies.loggedIn
+  if (req.session.authorized) {
+    return res.redirect('/')
+  }
 
   return res.render('auth/login', {
     path: '/login',
     docTitle: 'Login',
-    isAuthenticated: loggedIn,
   })
 }
 
 const login = async (req, res) => {
   try {
-    res.cookie('loggedIn', 'true')
+    req.session.authorized = true
 
     return res.redirect('/')
   } catch (error) {
@@ -20,10 +21,6 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
-    const cookie = req.cookies.loggedIn
-    res.cookie('loggedIn', '', { maxAge: Date.now() })
-
-    console.log(cookie)
     return res.redirect('/')
   } catch (error) {
     console.log(error)
