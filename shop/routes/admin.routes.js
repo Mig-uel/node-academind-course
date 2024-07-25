@@ -1,3 +1,7 @@
+// middleware
+const { isAuthenticated } = require('../middleware/auth.middleware')
+
+// controllers
 const {
   getAddProductForm,
   addProduct,
@@ -8,9 +12,15 @@ const {
 } = require('../controllers/admin.controller')
 const adminRouter = require('express').Router()
 
-adminRouter.route('/products').get(adminGetProducts)
-adminRouter.route('/products/add').get(getAddProductForm).post(addProduct)
-adminRouter.route('/edit/:id').get(getEditProductForm).patch(editProduct)
+adminRouter.route('/products').get(isAuthenticated, adminGetProducts)
+adminRouter
+  .route('/products/add')
+  .get(isAuthenticated, getAddProductForm)
+  .post(addProduct)
+adminRouter
+  .route('/edit/:id')
+  .get(isAuthenticated, getEditProductForm)
+  .patch(editProduct)
 adminRouter.route('/delete').delete(deleteProduct)
 
 module.exports = { adminRouter }
