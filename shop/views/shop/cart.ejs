@@ -18,7 +18,6 @@
         <h2>Quantity: <%= p.qty %></h2>
         <form action="/cart?_method=DELETE" method="POST">
           <input type="hidden" name="id" value="<%= p._id %>">
-          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
           <button class="btn danger" type="submit" class="btn">Remove</button>
         </form>
       </li>
