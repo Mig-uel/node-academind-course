@@ -1,3 +1,6 @@
+// middleware
+const { isAuthenticated } = require('../middleware/auth.middleware')
+
 // controllers
 const shopRouter = require('express').Router()
 const {
@@ -15,8 +18,12 @@ const {
 shopRouter.route('/').get(getHome)
 shopRouter.route('/products').get(getProducts)
 shopRouter.route('/products/:id').get(getProduct)
-shopRouter.route('/cart').get(getCart).post(addToCart).delete(removeFromCart)
-shopRouter.route('/checkout').get(getCheckout)
-shopRouter.route('/orders').get(getOrders).post(addOrder)
+shopRouter
+  .route('/cart')
+  .get(isAuthenticated, getCart)
+  .post(addToCart)
+  .delete(removeFromCart)
+shopRouter.route('/checkout').get(isAuthenticated, getCheckout)
+shopRouter.route('/orders').get(isAuthenticated, getOrders).post(addOrder)
 
 module.exports = { shopRouter }
