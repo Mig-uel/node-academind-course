@@ -3,11 +3,11 @@ const Order = require('./order.models')
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    email: {
       type: String,
       required: true,
     },
-    email: {
+    password: {
       type: String,
       required: true,
     },
