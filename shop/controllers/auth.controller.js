@@ -45,6 +45,21 @@ const getSignUp = async (req, res) => {
     isAuthenticated: req.session.user,
   })
 }
-const signup = async (req, res) => {}
+const signup = async (req, res) => {
+  try {
+    const { email, password, confirmPassword } = req.body
+
+    const userExists = await User.findOne({ email })
+    if (userExists) return res.redirect('/auth/signup')
+
+    const user = new User({ email, password, cart: { items: [] } })
+
+    await user.save()
+
+    return res.redirect('/auth/login')
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 module.exports = { getLogin, login, logout, getSignUp, signup }
