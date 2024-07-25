@@ -21,8 +21,8 @@ shopRouter.route('/products/:id').get(getProduct)
 shopRouter
   .route('/cart')
   .get(isAuthenticated, getCart)
-  .post(addToCart)
-  .delete(removeFromCart)
+  .post(isAuthenticated, addToCart)
+  .delete(isAuthenticated, removeFromCart)
 shopRouter.route('/checkout').get(isAuthenticated, getCheckout)
 shopRouter.route('/orders').get(isAuthenticated, getOrders).post(addOrder)
 
