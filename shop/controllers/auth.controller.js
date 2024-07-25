@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs')
 const User = require('../models/user.models')
 
 const getLogin = async (req, res) => {
@@ -14,14 +15,23 @@ const getLogin = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const user = await User.findById('66a02ed53e6b9281c2e26289')
+    const { email, password } = req.body
+    const user = await User.findOne({ email })
 
-    req.session.authorized = true
+    if (!user) throw new Error('No user found')
+
+    const checkPassword = await bcrypt.compare(password, user.password)
+
+    if (!checkPassword) return res.redirect('/auth/login')
+
     req.session.user = user
+    req.session.authorized = true
+    await req.session.save()
 
     return res.redirect('/')
   } catch (error) {
     console.log(error)
+    return res.send(`<h1>${error}</h1>`)
   }
 }
 
@@ -53,10 +63,12 @@ const signup = async (req, res) => {
     if (userExists) return res.redirect('/auth/signup')
 
     const user = new User({ email, password, cart: { items: [] } })
-
     await user.save()
 
-    return res.redirect('/auth/login')
+    req.session.user = user
+    req.session.authorized = true
+
+    return res.redirect('/')
   } catch (error) {
     console.log(error)
   }
