@@ -1,3 +1,5 @@
+const User = require('../models/user.models')
+
 const getLogin = async (req, res) => {
   if (req.session.authorized) {
     return res.redirect('/')
@@ -6,12 +8,16 @@ const getLogin = async (req, res) => {
   return res.render('auth/login', {
     path: '/login',
     docTitle: 'Login',
+    isAuthenticated: req.session.user,
   })
 }
 
 const login = async (req, res) => {
   try {
+    const user = await User.findById('66a02ed53e6b9281c2e26289')
+
     req.session.authorized = true
+    req.session.user = user
 
     return res.redirect('/')
   } catch (error) {
@@ -21,6 +27,7 @@ const login = async (req, res) => {
 
 const logout = async (req, res) => {
   try {
+    req.session.destroy()
     return res.redirect('/')
   } catch (error) {
     console.log(error)
