@@ -16,11 +16,11 @@ adminRouter.route('/products').get(isAuthenticated, adminGetProducts)
 adminRouter
   .route('/products/add')
   .get(isAuthenticated, getAddProductForm)
-  .post(addProduct)
+  .post(isAuthenticated, addProduct)
 adminRouter
   .route('/edit/:id')
   .get(isAuthenticated, getEditProductForm)
-  .patch(editProduct)
-adminRouter.route('/delete').delete(deleteProduct)
+  .patch(isAuthenticated, editProduct)
+adminRouter.route(isAuthenticated, '/delete').delete(deleteProduct)
 
 module.exports = { adminRouter }
