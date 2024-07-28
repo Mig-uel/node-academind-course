@@ -14,10 +14,14 @@
     <% } %>
     <form class="login-form" action="/auth/reset" method="POST">
       <div class="form-control">
-        <label for="email">Email Address</label>
-        <input type="email" name="email" id="email" required />
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required />
       </div>
-
+      <div class="form-control">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" required />
+      </div>
+      <input type="hidden" name="userId" value="<%= userId %>">
       <button type="submit" class="btn">Reset Password</button>
     </form>
   </main>
