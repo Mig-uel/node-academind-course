@@ -166,7 +166,36 @@ const getResetPassword = async (req, res) => {
     isAuthenticated: req.session.user,
     error: req.flash('error'),
     userId: user._id.toString(),
+    resetToken: token,
   })
+}
+
+const resetPassword = async (req, res) => {
+  try {
+    const { userId, password, confirmPassword, resetToken } = req.body
+
+    const user = await User.findOne({
+      resetToken,
+      resetTokenExp: { $gt: Date.now() },
+      _id: userId,
+    })
+
+    if (password !== confirmPassword) {
+      req.flash('error', 'Passwords must match. Please try again.')
+      res.redirect(`/auth/reset/${resetToken}`)
+    }
+
+    user.password = await bcrypt.hash(password, 12)
+    user.resetToken = null
+    user.resetTokenExp = undefined
+    await user.save()
+
+    req.flash('Password has been reset.')
+    return res.redirect('/auth/login')
+  } catch (error) {
+    req.flash('error', 'Invalid session')
+    return res.redirect('/auth/resetpassword')
+  }
 }
 
 module.exports = {
@@ -178,4 +207,5 @@ module.exports = {
   getResetPasswordRequest,
   resetPasswordRequest,
   getResetPassword,
+  resetPassword,
 }
