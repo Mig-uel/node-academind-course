@@ -92,16 +92,16 @@ const signup = async (req, res) => {
   }
 }
 
-const getResetPassword = async (req, res) => {
-  return res.render('auth/reset', {
-    path: '/reset',
+const getResetPasswordRequest = async (req, res) => {
+  return res.render('auth/reset-password-request', {
+    path: '/login',
     docTitle: 'Reset Password',
     isAuthenticated: req.session.user,
     error: req.flash('error'),
   })
 }
 
-const resetPassword = async (req, res) => {
+const resetPasswordRequest = async (req, res) => {
   try {
     const { email } = req.body
     const user = await User.findOne({ email })
@@ -111,14 +111,14 @@ const resetPassword = async (req, res) => {
         'error',
         'If the email address you provided is associated with an account, you will receive instructions to reset your password.'
       )
-      return res.redirect('/auth/reset')
+      return res.redirect('/auth/resetpassword')
     }
 
     crypto.randomBytes(32, (err, buffer) => {
       if (err) {
         console.log(err)
         req.flash('error', 'Something went wrong, please try again later.')
-        return res.redirect('/reset')
+        return res.redirect('/resetpassword')
       }
 
       const token = buffer.toString('hex')
@@ -136,7 +136,7 @@ const resetPassword = async (req, res) => {
             'Password Reset',
             `You requested a password reset.
             Click this <a href='http://localhost:3000/auth/reset/${token}'>link</a> to reset your password.`
-          ).then((result) => res.redirect('/auth/reset'))
+          ).then((result) => res.redirect('/auth/resetpassword'))
         })
         .catch((err) => console.log(err))
     })
@@ -145,12 +145,37 @@ const resetPassword = async (req, res) => {
   }
 }
 
+const getResetPassword = async (req, res) => {
+  const { token } = req.params
+  const user = await User.findOne({
+    resetToken: token,
+    resetTokenExp: { $gt: Date.now() },
+  })
+
+  if (!user) {
+    req.flash(
+      'error',
+      'The password reset link has expired, please request a new password reset link.'
+    )
+    return res.redirect('/auth/resetpassword')
+  }
+
+  return res.render('auth/reset', {
+    path: '/login',
+    docTitle: 'Reset Password',
+    isAuthenticated: req.session.user,
+    error: req.flash('error'),
+    userId: user._id.toString(),
+  })
+}
+
 module.exports = {
   getLogin,
   login,
   logout,
   getSignUp,
   signup,
+  getResetPasswordRequest,
+  resetPasswordRequest,
   getResetPassword,
-  resetPassword,
 }
