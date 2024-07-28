@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
 const User = require('../models/user.models')
 const { sendMail } = require('../utils/email.utils')
@@ -100,6 +101,50 @@ const getResetPassword = async (req, res) => {
   })
 }
 
+const resetPassword = async (req, res) => {
+  try {
+    const { email } = req.body
+    const user = await User.findOne({ email })
+
+    if (!user) {
+      req.flash(
+        'error',
+        'If the email address you provided is associated with an account, you will receive instructions to reset your password.'
+      )
+      return res.redirect('/auth/reset')
+    }
+
+    crypto.randomBytes(32, (err, buffer) => {
+      if (err) {
+        console.log(err)
+        req.flash('error', 'Something went wrong, please try again later.')
+        return res.redirect('/reset')
+      }
+
+      const token = buffer.toString('hex')
+      user.resetToken = token
+      user.resetTokenExp = Date.now() + 3600000
+      return user
+        .save()
+        .then((result) => {
+          req.flash(
+            'error',
+            'If the email address you provided is associated with an account, you will receive instructions to reset your password.'
+          )
+          sendMail(
+            user.email,
+            'Password Reset',
+            `You requested a password reset.
+            Click this <a href='http://localhost:3000/auth/reset/${token}'>link</a> to reset your password.`
+          ).then((result) => res.redirect('/auth/reset'))
+        })
+        .catch((err) => console.log(err))
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getLogin,
   login,
@@ -107,4 +152,5 @@ module.exports = {
   getSignUp,
   signup,
   getResetPassword,
+  resetPassword,
 }
