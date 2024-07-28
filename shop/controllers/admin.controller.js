@@ -78,7 +78,7 @@ const editProduct = async (req, res) => {
 
     const product = await Product.findById(id)
 
-    if (product.userId !== req.session.user._id)
+    if (product.userId.toString() !== req.session.user._id.toString())
       return res.redirect('/admin/products')
 
     await Product.findByIdAndUpdate(id, {
