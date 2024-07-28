@@ -10,6 +10,7 @@ const {
   getResetPasswordRequest,
   resetPasswordRequest,
   getResetPassword,
+  resetPassword,
 } = require('../controllers/auth.controller')
 
 const authRouter = Router()
@@ -22,5 +23,6 @@ authRouter
   .get(getResetPasswordRequest)
   .post(resetPasswordRequest)
 authRouter.route('/reset/:token').get(getResetPassword)
+authRouter.route('/reset').post(resetPassword)
 
 module.exports = { authRouter }
