@@ -21,6 +21,6 @@ adminRouter
   .route('/edit/:id')
   .get(isAuthenticated, getEditProductForm)
   .patch(isAuthenticated, editProduct)
-adminRouter.route(isAuthenticated, '/delete').delete(deleteProduct)
+adminRouter.route('/delete').delete(isAuthenticated, deleteProduct)
 
 module.exports = { adminRouter }
