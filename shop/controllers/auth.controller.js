@@ -79,7 +79,7 @@ const signup = async (req, res) => {
     req.session.user = user
     req.session.authorized = true
 
-    sendMail(
+    await sendMail(
       user.email,
       'Account Created',
       `Your account ${user.email} has been successfully created!`
@@ -91,4 +91,20 @@ const signup = async (req, res) => {
   }
 }
 
-module.exports = { getLogin, login, logout, getSignUp, signup }
+const getResetPassword = async (req, res) => {
+  return res.render('auth/reset', {
+    path: '/reset',
+    docTitle: 'Reset Password',
+    isAuthenticated: req.session.user,
+    error: req.flash('error'),
+  })
+}
+
+module.exports = {
+  getLogin,
+  login,
+  logout,
+  getSignUp,
+  signup,
+  getResetPassword,
+}
