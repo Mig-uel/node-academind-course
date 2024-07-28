@@ -76,7 +76,17 @@ const editProduct = async (req, res) => {
     if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
       throw new Error('All fields all required')
 
-    await Product.findByIdAndUpdate(id, { title, imageUrl, price, description })
+    const product = await Product.findById(id)
+
+    if (product.userId !== req.session.user._id)
+      return res.redirect('/admin/products')
+
+    await Product.findByIdAndUpdate(id, {
+      title,
+      imageUrl,
+      price,
+      description,
+    })
 
     return res.redirect(`/admin/products`)
   } catch (error) {
@@ -91,9 +101,10 @@ const deleteProduct = async (req, res) => {
   try {
     const { id } = req.body
 
-    const deletedProduct = await Product.findByIdAndDelete(id)
-
-    if (!deletedProduct) throw new Error('Product not found')
+    const product = await Product.deleteOne({
+      _id: id,
+      userId: req.session.user._id,
+    })
 
     return res.redirect('/admin/products')
   } catch (error) {
