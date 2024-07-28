@@ -74,7 +74,13 @@ const signup = async (req, res) => {
       return res.redirect('/auth/signup')
     }
 
-    const user = new User({ email, password, cart: { items: [] } })
+    const hashedPassword = await bcrypt.hash(password, 12)
+
+    const user = new User({
+      email,
+      password: hashedPassword,
+      cart: { items: [] },
+    })
     await user.save()
 
     req.session.user = user
