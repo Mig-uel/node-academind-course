@@ -33,12 +33,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 )
 
-UserSchema.pre('save', async function () {
-  const hashedPassword = bcrypt.hash(this.password, 12)
-
-  this.password = hashedPassword
-})
-
 UserSchema.methods.addToCart = async function (product) {
   const existingProduct = await this.cart.items.find(
     (item) => item.productId.toString() === product._id.toString()
