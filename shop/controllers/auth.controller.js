@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const bcrypt = require('bcryptjs')
+const { validationResult } = require('express-validator')
 const User = require('../models/user.models')
 const { sendMail } = require('../utils/email.utils')
 
@@ -67,6 +68,19 @@ const getSignUp = async (req, res) => {
 const signup = async (req, res) => {
   try {
     const { email, password, confirmPassword } = req.body
+
+    // validation
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      console.log(errors.array())
+      return res.status(422).render('auth/signup', {
+        path: '/signup',
+        docTitle: 'Sign Up',
+        isAuthenticated: req.session.user,
+        error: errors.array()[0].msg,
+      })
+    }
 
     const userExists = await User.findOne({ email })
     if (userExists) {
