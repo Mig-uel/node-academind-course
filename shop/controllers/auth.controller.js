@@ -58,36 +58,30 @@ const getSignUp = async (req, res) => {
     return res.redirect('/')
   }
 
+  // validation
+  const errors = validationResult(req)
+
   return res.render('auth/signup', {
     path: '/signup',
     docTitle: 'Sign Up',
     isAuthenticated: req.session.user,
-    error: req.flash('error'),
-    errors: [],
+    errors: errors.array(),
   })
 }
 const signup = async (req, res) => {
   try {
-    const { email, password, confirmPassword } = req.body
+    const { email, password } = req.body
 
     // validation
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-      console.log(errors.array())
       return res.status(422).render('auth/signup', {
         path: '/signup',
         docTitle: 'Sign Up',
         isAuthenticated: req.session.user,
         errors: errors.array(),
-        error: [],
       })
-    }
-
-    const userExists = await User.findOne({ email })
-    if (userExists) {
-      req.flash('error', 'Email is already in use')
-      return res.redirect('/auth/signup')
     }
 
     const hashedPassword = await bcrypt.hash(password, 12)
