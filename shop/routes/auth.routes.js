@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs')
 const { Router } = require('express')
 const { check, body } = require('express-validator')
 const User = require('../models/user.models')
@@ -17,7 +18,33 @@ const {
 
 const authRouter = Router()
 
-authRouter.route('/login').get(getLogin).post(login)
+authRouter
+  .route('/login')
+  .get(getLogin)
+  .post(
+    [
+      check('email')
+        .isEmail()
+        .withMessage('Please enter a valid email')
+        .custom(async (value, { req }) => {
+          const user = await User.findOne({ email: value })
+
+          if (!user) throw new Error('Invalid email or password')
+
+          const checkPassword = await bcrypt.compare(
+            req.body.password,
+            user.password
+          )
+
+          if (!checkPassword) throw new Error('Invalid email or password')
+
+          req.user = user
+
+          return true
+        }),
+    ],
+    login
+  )
 authRouter.route('/logout').get(logout)
 authRouter
   .route('/signup')
