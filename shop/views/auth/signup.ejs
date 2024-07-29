@@ -11,15 +11,18 @@
     <form class="login-form" action="/auth/signup" method="POST">
       <div class="form-control">
         <label for="email">Email Address</label>
-        <input type="email" name="email" id="email" value="<%= prevInput.email %>" required>
+        <input class="<%= errors.find(e => e.path === 'email') ? 'invalid' : '' %>" type="email" name="email" id="email"
+          value="<%= prevInput.email %>" required>
       </div>
       <div class="form-control">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password">
+        <input class="<%= errors.find(e => e.path === 'password' || e.path === 'confirmPassword') ? 'invalid' : '' %>"
+          type="password" name="password" id="password">
       </div>
       <div class="form-control">
         <label for="confirmPassword">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="confirmPassword">
+        <input class="<%= errors.find(e => e.path === 'confirmPassword') ? 'invalid' : '' %>" type="password"
+          name="confirmPassword" id="confirmPassword">
       </div>
 
       <button class="btn" type="submit">Sign Up</button>
