@@ -26,6 +26,7 @@ authRouter
       check('email')
         .isEmail()
         .withMessage('Please enter a valid email')
+        .normalizeEmail()
         .custom(async (value, { req }) => {
           const user = await User.findOne({ email: value })
 
@@ -54,6 +55,7 @@ authRouter
       check('email')
         .isEmail()
         .withMessage('Please enter a valid email')
+        .normalizeEmail()
         .custom(async (value, { req }) => {
           const userExists = await User.findOne({ email: req.body.email })
           if (userExists) throw new Error('Email is already in use')
