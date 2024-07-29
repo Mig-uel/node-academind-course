@@ -63,6 +63,7 @@ const getSignUp = async (req, res) => {
     docTitle: 'Sign Up',
     isAuthenticated: req.session.user,
     error: req.flash('error'),
+    errors: [],
   })
 }
 const signup = async (req, res) => {
@@ -78,7 +79,8 @@ const signup = async (req, res) => {
         path: '/signup',
         docTitle: 'Sign Up',
         isAuthenticated: req.session.user,
-        error: errors.array()[0].msg,
+        errors: errors.array(),
+        error: [],
       })
     }
 
