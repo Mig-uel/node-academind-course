@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const { check, body } = require('express-validator')
+const User = require('../models/user.models')
 
 // controllers
 const {
@@ -23,7 +24,14 @@ authRouter
   .get(getSignUp)
   .post(
     [
-      check('email').isEmail().withMessage('Please enter a valid email'),
+      check('email')
+        .isEmail()
+        .withMessage('Please enter a valid email')
+        .custom(async (value, { req }) => {
+          const userExists = await User.findOne({ email: req.body.email })
+          if (userExists) throw new Error('Email is already in use')
+          return true
+        }),
       body('password', 'Password must be at least 5 characters').isLength({
         min: 5,
       }),
