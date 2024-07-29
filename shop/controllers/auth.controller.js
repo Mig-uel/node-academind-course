@@ -26,7 +26,7 @@ const login = async (req, res) => {
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-      return res.render('auth/login', {
+      return res.status(422).render('auth/login', {
         path: '/login',
         docTitle: 'Login',
         isAuthenticated: req.session.user,
