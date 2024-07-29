@@ -69,6 +69,7 @@ const getSignUp = async (req, res) => {
     docTitle: 'Sign Up',
     isAuthenticated: req.session.user,
     errors: errors.array(),
+    prevInput: { email: '' },
   })
 }
 const signup = async (req, res) => {
@@ -84,6 +85,7 @@ const signup = async (req, res) => {
         docTitle: 'Sign Up',
         isAuthenticated: req.session.user,
         errors: errors.array(),
+        prevInput: { email },
       })
     }
 
