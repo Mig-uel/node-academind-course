@@ -7,11 +7,7 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
-    <% if (errors.length) { %>
-    <% errors.forEach(e => {  %>
-    <div class="user-message user-message--error"><%= e.msg %></div>
-    <% }) %>
-    <% } %>
+    <%- include('../includes/errors.ejs') %>
     <form class="login-form" action="/auth/signup" method="POST">
       <div class="form-control">
         <label for="email">Email Address</label>
