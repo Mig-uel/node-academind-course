@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const { check } = require('express-validator')
+const { check, body } = require('express-validator')
 
 // controllers
 const {
@@ -22,7 +22,18 @@ authRouter
   .route('/signup')
   .get(getSignUp)
   .post(
-    check('email').isEmail().withMessage('Please enter a valid email'),
+    [
+      check('email').isEmail().withMessage('Please enter a valid email'),
+      body('password', 'Password must be at least 5 characters').isLength({
+        min: 5,
+      }),
+      body('confirmPassword').custom((value, { req }) => {
+        if (value !== req.body.password)
+          throw new Error('Passwords do not match')
+
+        return true
+      }),
+    ],
     signup
   )
 authRouter
