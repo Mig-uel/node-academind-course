@@ -1,4 +1,5 @@
 const { Router } = require('express')
+const { check } = require('express-validator')
 
 // controllers
 const {
@@ -17,7 +18,13 @@ const authRouter = Router()
 
 authRouter.route('/login').get(getLogin).post(login)
 authRouter.route('/logout').get(logout)
-authRouter.route('/signup').get(getSignUp).post(signup)
+authRouter
+  .route('/signup')
+  .get(getSignUp)
+  .post(
+    check('email').isEmail().withMessage('Please enter a valid email'),
+    signup
+  )
 authRouter
   .route('/resetpassword')
   .get(getResetPasswordRequest)
