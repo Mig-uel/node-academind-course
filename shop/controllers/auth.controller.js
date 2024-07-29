@@ -9,29 +9,32 @@ const getLogin = async (req, res) => {
     return res.redirect('/')
   }
 
+  // validation
+  const errors = validationResult(req)
+
   return res.render('auth/login', {
     path: '/login',
     docTitle: 'Login',
     isAuthenticated: req.session.user,
-    error: req.flash('error'),
+    errors: errors.array(),
   })
 }
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body
-    const user = await User.findOne({ email })
+    // validation
+    const errors = validationResult(req)
 
-    if (!user) {
-      req.flash('error', 'Invalid email or password')
-      return res.redirect('/auth/login')
+    if (!errors.isEmpty()) {
+      return res.render('auth/login', {
+        path: '/login',
+        docTitle: 'Login',
+        isAuthenticated: req.session.user,
+        errors: errors.array(),
+      })
     }
 
-    const checkPassword = await bcrypt.compare(password, user.password)
-    if (!checkPassword) {
-      req.flash('error', 'Invalid email or password')
-      return res.redirect('/auth/login')
-    }
+    const { user } = req
 
     req.session.user = user
     req.session.authorized = true
