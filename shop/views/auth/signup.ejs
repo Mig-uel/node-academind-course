@@ -7,8 +7,10 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
-    <% if (error.length) { %>
-    <div class="user-message user-message--error"><%= error %></div>
+    <% if (errors.length) { %>
+    <% errors.forEach(e => {  %>
+    <div class="user-message user-message--error"><%= e.msg %></div>
+    <% }) %>
     <% } %>
     <form class="login-form" action="/auth/signup" method="POST">
       <div class="form-control">
