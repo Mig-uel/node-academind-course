@@ -17,7 +17,8 @@ const errorHandler = (error, req, res, next) => {
       docTitle: 'Email sent',
       path: '',
       isAuthenticated: req.session.authorized,
-      errors: [
+      errors: [],
+      infos: [
         {
           msg: 'If the email address you provided is associated with an account, you will receive instructions to reset your password.',
         },
