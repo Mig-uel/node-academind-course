@@ -3,4 +3,7 @@ const use404 = (req, res, next) =>
     docTitle: 'Page Not Found',
   })
 
-module.exports = { use404 }
+const use500 = (req, res, next) =>
+  res.status(500).render('500', { docTitle: 'Internal Server Error' })
+
+module.exports = { use404, use500 }
