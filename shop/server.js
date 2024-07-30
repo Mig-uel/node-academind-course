@@ -8,6 +8,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
+const multer = require('multer')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
 const { hydrateUser } = require('./middleware/auth.middleware')
@@ -16,7 +17,7 @@ const { hydrateUser } = require('./middleware/auth.middleware')
 const { db } = require('./utils/db.utils')
 const User = require('./models/user.models')
 
-// router
+// routers
 const { adminRouter } = require('./routes/admin.routes')
 const { shopRouter } = require('./routes/shop.routes')
 const { authRouter } = require('./routes/auth.routes')
@@ -42,6 +43,7 @@ app.use((req, res, next) => {
   next()
 }) // method - url - status
 app.use(express.urlencoded({ extended: true })) // parse form data
+app.use(multer().single('image')) // parse image data
 app.use(express.json()) // parse json data
 app.use(methodOverride('_method'))
 
