@@ -76,7 +76,10 @@ authRouter
 authRouter
   .route('/resetpassword')
   .get(getResetPasswordRequest)
-  .post(resetPasswordRequest)
+  .post(
+    [check('email', 'Please enter a valid email').isEmail()],
+    resetPasswordRequest
+  )
 authRouter.route('/reset/:token').get(getResetPassword)
 authRouter.route('/reset').post(resetPassword)
 
