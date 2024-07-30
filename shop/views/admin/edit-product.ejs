@@ -9,6 +9,7 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
+    <%- include('../includes/errors.ejs') %>
     <form class="product-form" action="/admin/edit/<%= product._id %>?_method=PATCH" method="POST">
       <div class="form-control">
         <label for="title">Title</label>
