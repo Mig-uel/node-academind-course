@@ -29,6 +29,18 @@ adminRouter
       check('description', 'Description is invalid')
         .trim()
         .isLength({ min: 8, max: 400 }),
+      check('image').custom((value, { req }) => {
+        if (req.file) {
+          if (
+            req.file.mimetype === 'image/png' ||
+            req.file.mimetype === 'image/jpg' ||
+            req.file.mimetype === 'image/jpeg'
+          )
+            return true
+        }
+
+        throw new Error('Images only (.png/.jpg/.jpeg)')
+      }),
     ],
     addProduct
   )
@@ -47,6 +59,18 @@ adminRouter
       check('description', 'Description is invalid')
         .trim()
         .isLength({ min: 8, max: 400 }),
+      check('image').custom((value, { req }) => {
+        if (req.file) {
+          if (
+            req.file.mimetype === 'image/png' ||
+            req.file.mimetype === 'image/jpg' ||
+            req.file.mimetype === 'image/jpeg'
+          )
+            return true
+        }
+
+        throw new Error('Images only (.png/.jpg/.jpeg)')
+      }),
     ],
     editProduct
   )
