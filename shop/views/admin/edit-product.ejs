@@ -10,7 +10,8 @@
 
   <main>
     <%- include('../includes/errors.ejs') %>
-    <form class="product-form" action="/admin/edit/<%= product._id %>?_method=PATCH" method="POST">
+    <form class="product-form" action="/admin/edit/<%= product._id %>?_method=PATCH" method="POST"
+      enctype="multipart/form-data">
       <div class="form-control">
         <label for="title">Title</label>
         <input class="<%= errors.find(e => e.path === 'title') ? 'invalid' : '' %>" type="text" name="title" id="title"
