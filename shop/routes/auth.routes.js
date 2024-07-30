@@ -81,6 +81,18 @@ authRouter
     resetPasswordRequest
   )
 authRouter.route('/reset/:token').get(getResetPassword)
-authRouter.route('/reset').post(resetPassword)
+authRouter.route('/reset').post(
+  [
+    check('password', 'Password must be at least 5 characters').isLength({
+      min: 5,
+    }),
+    check('confirmPassword').custom((value, { req }) => {
+      if (value !== req.body.password) throw new Error('Passwords do not match')
+
+      return true
+    }),
+  ],
+  resetPassword
+)
 
 module.exports = { authRouter }
