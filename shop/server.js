@@ -22,6 +22,7 @@ const { adminRouter } = require('./routes/admin.routes')
 const { shopRouter } = require('./routes/shop.routes')
 const { authRouter } = require('./routes/auth.routes')
 const { use404 } = require('./controllers/error.controller')
+const { errorHandler } = require('./middleware/error.middleware')
 
 // config
 const app = express()
@@ -66,6 +67,9 @@ app.use('/', shopRouter)
 
 // 404
 app.use(use404)
+
+// Error handler
+app.use(errorHandler)
 
 db()
 
