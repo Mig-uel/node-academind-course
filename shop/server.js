@@ -7,7 +7,6 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
-const flash = require('connect-flash')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
@@ -58,7 +57,6 @@ app.use(
   })
 )
 app.use(hydrateUser)
-app.use(flash())
 
 // routes
 app.use('/auth', authRouter)
