@@ -25,7 +25,6 @@ adminRouter
         .isString()
         .isLength({ min: 3 })
         .withMessage('Title must be at least 3 characters'),
-      check('imageUrl', 'Invalid image URL').trim().isURL().withMessage(),
       check('price', 'Invalid price').isFloat(),
       check('description', 'Description is invalid')
         .trim()
@@ -44,7 +43,6 @@ adminRouter
         .isString()
         .isLength({ min: 3 })
         .withMessage('Title must be at least 3 characters'),
-      check('imageUrl', 'Invalid image URL').trim().isURL().withMessage(),
       check('price', 'Invalid price').isFloat(),
       check('description', 'Description is invalid')
         .trim()
