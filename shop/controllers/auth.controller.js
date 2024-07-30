@@ -122,7 +122,6 @@ const getResetPasswordRequest = async (req, res) => {
     path: '/login',
     docTitle: 'Reset Password',
     isAuthenticated: req.session.user,
-    error: req.flash('error'),
     errors: errors.array(),
   })
 }
@@ -137,7 +136,6 @@ const resetPasswordRequest = async (req, res, next) => {
         path: '/login',
         docTitle: 'Reset Password',
         isAuthenticated: req.session.user,
-        error: req.flash('error'),
         errors: errors.array(),
       })
     }
