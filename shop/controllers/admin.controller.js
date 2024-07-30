@@ -1,10 +1,10 @@
 const { validationResult } = require('express-validator')
 const Product = require('../models/product.models')
 
-const adminGetProducts = async (req, res) => {
+const adminGetProducts = async (req, res, next) => {
   try {
     const { user } = req.session
-    const products = await Product.find({ userId: user })
+    const products = await Product.find({ userId: user._id })
 
     return res.render('admin/admin-product-list', {
       products,
@@ -13,7 +13,7 @@ const adminGetProducts = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    console.log(error)
+    return next(error)
   }
 }
 
@@ -30,7 +30,7 @@ const getAddProductForm = async (req, res) => {
   })
 }
 
-const addProduct = async (req, res) => {
+const addProduct = async (req, res, next) => {
   try {
     const { user } = req.session
     const { title, imageUrl, description, price } = req.body
@@ -48,9 +48,6 @@ const addProduct = async (req, res) => {
       })
     }
 
-    if (!title.trim() || !price || !description.trim() || !imageUrl.trim())
-      throw new Error('All fields all required')
-
     const product = new Product({
       title,
       price,
@@ -61,22 +58,26 @@ const addProduct = async (req, res) => {
 
     await product.save()
 
-    return res.redirect('/admin/products')
+    return res.status(201).redirect('/admin/products')
   } catch (error) {
-    console.log(error.message)
-    return res.redirect('/admin/products/add')
+    return next(error)
   }
 }
 
-const getEditProductForm = async (req, res) => {
+const getEditProductForm = async (req, res, next) => {
   try {
     const { id } = req.params
     const product = await Product.findById(id)
 
+    // if no product is found
+    if (!product) throw new Error('Product not found')
+
+    // if user is not the creator of this product
+    if (product.userId.toString() !== req.session.user._id.toString())
+      throw new Error('Unauthorized to edit this product')
+
     // validation
     const errors = validationResult(req)
-
-    if (!product) throw new Error('Product not found')
 
     return res.render('admin/edit-product', {
       product,
@@ -86,16 +87,22 @@ const getEditProductForm = async (req, res) => {
       errors: errors.array(),
     })
   } catch (error) {
-    console.log(error.message)
-    return res.redirect('/admin/products')
+    return next(error)
   }
 }
 
-const editProduct = async (req, res) => {
+const editProduct = async (req, res, next) => {
   try {
     const { id } = req.params
     const { title, imageUrl, price, description } = req.body
     const product = await Product.findById(id)
+
+    // if no product is found
+    if (!product) throw new Error('Product not found')
+
+    // if user is not the creator of this product
+    if (product.userId.toString() !== req.session.user._id.toString())
+      throw new Error('Unauthorized to edit this product')
 
     // validation
     const errors = validationResult(req)
@@ -110,9 +117,6 @@ const editProduct = async (req, res) => {
       })
     }
 
-    if (product.userId.toString() !== req.session.user._id.toString())
-      return res.redirect('/admin/products')
-
     await Product.findByIdAndUpdate(id, {
       title,
       imageUrl,
@@ -120,26 +124,28 @@ const editProduct = async (req, res) => {
       description,
     })
 
-    return res.redirect(`/admin/products`)
+    return res.status(204).redirect(`/admin/products`)
   } catch (error) {
-    console.log(error.message)
-    return res.redirect(`/admin/products`)
+    return next(error)
   }
 }
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   try {
     const { id } = req.body
 
-    const product = await Product.deleteOne({
-      _id: id,
+    const product = await Product.findById(id)
+
+    if (!product) throw new Error('Product not found')
+
+    await Product.deleteOne({
+      _id: product._id,
       userId: req.session.user._id,
     })
 
     return res.redirect('/admin/products')
   } catch (error) {
-    console.log(error.message)
-    return res.redirect('/admin/products')
+    return next(error)
   }
 }
 
