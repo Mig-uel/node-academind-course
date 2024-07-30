@@ -52,7 +52,17 @@ UserSchema.methods.addToCart = async function (product) {
 }
 
 UserSchema.methods.getCart = async function () {
+  if (this.cart.items.length) return this.cart
+
   const populatedCart = await this.cart.populate('items.productId')
+
+  // check for products that have been deleted and remove
+  this.cart.items = populatedCart.items.map((i) => {
+    if (i.productId === null) return undefined
+    else return i
+  })
+
+  await this.save()
 
   const cart = populatedCart.items.map((i) => {
     return { ...i.productId._doc, qty: i.qty }
