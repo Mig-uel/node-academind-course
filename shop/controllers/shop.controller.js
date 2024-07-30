@@ -1,9 +1,11 @@
 const Product = require('../models/product.models')
-const User = require('../models/user.models')
 
-const getHome = async (req, res) => {
+const getHome = async (req, res, next) => {
   try {
     const products = await Product.find({})
+
+    // if no products are found because of mongo error
+    if (!products) throw new Error('Cannot fetch products')
 
     return res.render('shop/index', {
       products,
@@ -12,14 +14,16 @@ const getHome = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    console.log(error.message)
-    return res.redirect('/')
+    return next(error)
   }
 }
 
-const getProducts = async (req, res) => {
+const getProducts = async (req, res, next) => {
   try {
     const products = await Product.find({})
+
+    // if no products are found because of mongo error
+    if (!products) throw new Error('Cannot fetch products')
 
     return res.render('shop/product-list', {
       products,
@@ -28,15 +32,17 @@ const getProducts = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    console.log(error.message)
-    return res.redirect('/products')
+    return next(error)
   }
 }
 
-const getProduct = async (req, res) => {
+const getProduct = async (req, res, next) => {
   try {
     const { id } = req.params
     const product = await Product.findById(id)
+
+    // if no product is found
+    if (!product) throw new Error('Product not found')
 
     return res.render('shop/product-detail', {
       product,
@@ -45,12 +51,11 @@ const getProduct = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    console.log(error)
-    return res.redirect('/products')
+    return next(error)
   }
 }
 
-const getCart = async (req, res) => {
+const getCart = async (req, res, next) => {
   try {
     const { user } = req.session
 
@@ -63,28 +68,29 @@ const getCart = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    return res.send(`<h1>${error}</h1>`)
+    return next(error)
   }
 }
 
-const addToCart = async (req, res) => {
+const addToCart = async (req, res, next) => {
   try {
     const { id } = req.body
     const { user } = req.session
 
     const product = await Product.findById(id)
+
+    // if no product is found
     if (!product) throw new Error('Product not found')
 
     await user.addToCart(product)
 
     return res.redirect(302, '/cart')
   } catch (error) {
-    console.log(error)
-    return res.redirect('/products')
+    return next(error)
   }
 }
 
-const getOrders = async (req, res) => {
+const getOrders = async (req, res, next) => {
   try {
     const { user } = req.session
 
@@ -97,12 +103,11 @@ const getOrders = async (req, res) => {
       isAuthenticated: req.session.user,
     })
   } catch (error) {
-    console.log(error)
-    return res.send(`<h1>${error}</h1>`)
+    return next(error)
   }
 }
 
-const addOrder = async (req, res) => {
+const addOrder = async (req, res, next) => {
   try {
     const { user } = req.session
 
@@ -110,7 +115,7 @@ const addOrder = async (req, res) => {
 
     return res.redirect('/orders')
   } catch (error) {
-    console.log(error)
+    return next(error)
   }
 }
 
@@ -122,7 +127,7 @@ const getCheckout = async (req, res) => {
   })
 }
 
-const removeFromCart = async (req, res) => {
+const removeFromCart = async (req, res, next) => {
   try {
     const { id } = req.body
     const { user } = req.session
@@ -131,7 +136,6 @@ const removeFromCart = async (req, res) => {
 
     return res.redirect('/cart')
   } catch (error) {
-    console.log(error)
     return res.redirect('/cart')
   }
 }
