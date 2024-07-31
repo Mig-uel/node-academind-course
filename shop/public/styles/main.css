@@ -60,6 +60,10 @@ form {
   padding: 0;
 }
 
+.email {
+  color: #fff;
+}
+
 .main-header__item a,
 .main-header__item button {
   font: inherit;
