@@ -9,6 +9,7 @@ const errorHandler = (error, req, res, next) => {
       path: '',
       isAuthenticated: req.session.authorized,
       errors: [{ msg: 'Invalid Product ID' }],
+      email: req?.session?.user?.email,
     })
   }
 
@@ -23,6 +24,7 @@ const errorHandler = (error, req, res, next) => {
           msg: 'If the email address you provided is associated with an account, you will receive instructions to reset your password.',
         },
       ],
+      email: req?.session?.user?.email,
     })
   }
 
@@ -31,6 +33,7 @@ const errorHandler = (error, req, res, next) => {
     path: '',
     isAuthenticated: req.session.authorized,
     errors: [{ msg: error.message }],
+    email: req?.session?.user?.email,
   })
 }
 
