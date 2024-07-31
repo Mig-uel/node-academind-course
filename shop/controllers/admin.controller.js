@@ -11,6 +11,7 @@ const adminGetProducts = async (req, res, next) => {
       docTitle: 'Admin All Products',
       path: '/admin/products',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
@@ -27,6 +28,7 @@ const getAddProductForm = async (req, res) => {
     isAuthenticated: req.session.user,
     errors: errors.array(),
     prevInput: { title: '', imageUrl: '', description: '', price: '' },
+    email: req.session.user.email,
   })
 }
 
@@ -88,6 +90,7 @@ const getEditProductForm = async (req, res, next) => {
       path: '/admin/products',
       isAuthenticated: req.session.user,
       errors: errors.array(),
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
