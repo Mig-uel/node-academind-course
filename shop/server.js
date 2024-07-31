@@ -40,7 +40,8 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
-app.use(express.static('public')) // server static files/grant access (public folder)
+app.use(express.static('public')) // serve static files/grant access (public folder)
+app.use('/images', express.static('images')) // serve static files/grant access (images folder)
 app.use((req, res, next) => {
   console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow)
   next()
