@@ -12,6 +12,7 @@ const getHome = async (req, res, next) => {
       docTitle: 'Home',
       path: '/',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
@@ -30,6 +31,7 @@ const getProducts = async (req, res, next) => {
       docTitle: 'All Products',
       path: '/products',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
@@ -49,6 +51,7 @@ const getProduct = async (req, res, next) => {
       docTitle: product.title,
       path: '/products',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
@@ -66,6 +69,7 @@ const getCart = async (req, res, next) => {
       docTitle: 'Cart',
       path: '/cart',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
@@ -101,6 +105,7 @@ const getOrders = async (req, res, next) => {
       docTitle: 'Orders',
       path: '/orders',
       isAuthenticated: req.session.user,
+      email: req.session.user.email,
     })
   } catch (error) {
     return next(error)
