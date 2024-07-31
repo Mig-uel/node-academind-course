@@ -51,18 +51,19 @@ UserSchema.methods.addToCart = async function (product) {
   await this.save()
 }
 
+// UserSchema.methods.checkCart = async function () {
+//   if (!this.cart.items.length) return
+
+//   // check for products that have been deleted from product list, and return filtered cart
+//   this.cart.items = this.cart.items.filter((item) => item.productId !== null)
+
+//   await this.save()
+// }
+
 UserSchema.methods.getCart = async function () {
-  if (this.cart.items.length) return this.cart
+  if (!this.cart.items.length) return this.cart
 
   const populatedCart = await this.cart.populate('items.productId')
-
-  // check for products that have been deleted and remove
-  this.cart.items = populatedCart.items.map((i) => {
-    if (i.productId === null) return undefined
-    else return i
-  })
-
-  await this.save()
 
   const cart = populatedCart.items.map((i) => {
     return { ...i.productId._doc, qty: i.qty }
