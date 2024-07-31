@@ -33,7 +33,8 @@ const getAddProductForm = async (req, res) => {
 const addProduct = async (req, res, next) => {
   try {
     const { user } = req.session
-    const { title, imageUrl, description, price } = req.body
+    const { title, description, price } = req.body
+    const image = req.file
 
     // validation
     const errors = validationResult(req)
@@ -44,9 +45,11 @@ const addProduct = async (req, res, next) => {
         path: '/admin/products/add',
         isAuthenticated: req.session.user,
         errors: errors.array(),
-        prevInput: { title, imageUrl, description, price },
+        prevInput: { title, description, price },
       })
     }
+
+    const imageUrl = image.path
 
     const product = new Product({
       title,
@@ -94,7 +97,8 @@ const getEditProductForm = async (req, res, next) => {
 const editProduct = async (req, res, next) => {
   try {
     const { id } = req.params
-    const { title, imageUrl, price, description } = req.body
+    const { title, price, description } = req.body
+    const image = req.file
     const product = await Product.findById(id)
 
     // if no product is found
@@ -116,6 +120,8 @@ const editProduct = async (req, res, next) => {
         errors: errors.array(),
       })
     }
+
+    let imageUrl = image?.path || product.imageUrl
 
     await Product.findByIdAndUpdate(id, {
       title,
