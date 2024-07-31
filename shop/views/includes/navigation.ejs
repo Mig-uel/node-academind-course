@@ -29,6 +29,11 @@
       <% } %>
     </ul>
     <ul class="main-header__item-list">
+      <% if (isAuthenticated) { %>
+      <li class="main-header__item email">
+        <span><%= email %></>
+      </li>
+      <% } %>
       <li class="main-header__item">
         <a class="<%= path === '/login' ? 'active' : '' %>"
           href="<%= isAuthenticated ? '/auth/logout' : '/auth/login' %>"><%= isAuthenticated ? 'Logout' : 'Login'%></a>
