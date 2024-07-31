@@ -69,7 +69,7 @@ adminRouter
             return true
         }
 
-        throw new Error('Images only (.png/.jpg/.jpeg)')
+        if (!req.file) return true
       }),
     ],
     editProduct
