@@ -71,6 +71,13 @@
       </a>
     </li>
     <% } %>
+
+    <% if (isAuthenticated) { %>
+    <li class="mobile-nav__item">
+      <span><%= email  %></>
+    </li>
+    <% } %>
+
     <li class="mobile-nav__item">
       <a class="<%= path === '/login' ? 'active' : '' %>"
         href="<%= isAuthenticated ? '/auth/logout' : '/auth/login' %>"><%= isAuthenticated ? 'Logout' : 'Login'%></a>
