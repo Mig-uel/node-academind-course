@@ -1,5 +1,6 @@
 const fs = require('fs')
 const path = require('path')
+const PDFDocument = require('pdfkit')
 const Product = require('../models/product.models')
 const Order = require('../models/order.models')
 
@@ -161,13 +162,47 @@ const getInvoice = async (req, res, next) => {
     const invoiceName = `invoice-${orderId}.pdf`
     const invoicePath = path.join('data', 'invoices', invoiceName)
 
-    const file = fs.createReadStream(invoicePath)
+    const invoicePdf = new PDFDocument().font('Helvetica')
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
 
-    // stream data
-    file.pipe(res)
+    invoicePdf.pipe(fs.createWriteStream(invoicePath))
+
+    invoicePdf.pipe(res)
+
+    invoicePdf
+      .font('Helvetica-Bold')
+      .fontSize(16)
+      .text(`Invoice - #${orderId}`, { underline: true })
+
+    let totalPrice = 0
+
+    order.products.forEach((product, index) => {
+      let totalItemPrice = product.price * product.qty
+      totalPrice += totalItemPrice
+      invoicePdf.moveDown()
+      invoicePdf
+        .font('Helvetica-Bold')
+        .fontSize(14)
+        .text(`Item ${index + 1}`, { underline: true })
+      invoicePdf.font('Helvetica').fontSize(12).text('Item Name:')
+      invoicePdf.text(product.title, { lineGap: 5 })
+      invoicePdf.text('Description:')
+      invoicePdf.text(product.description, { lineGap: 5 })
+      invoicePdf.text(`Quantity: ${product.qty}`, { lineGap: 5 })
+      invoicePdf.text('Price:')
+      invoicePdf.text(`$${product.price.toLocaleString()}`, { lineGap: 5 })
+      invoicePdf.text('Total Item Price')
+      invoicePdf.text(`$${totalItemPrice.toLocaleString()}`)
+    })
+
+    invoicePdf.moveDown()
+    invoicePdf
+      .font('Helvetica-Bold')
+      .fontSize(16)
+      .text(`Total: $${totalPrice.toLocaleString()}`)
+    invoicePdf.end()
   } catch (error) {
     return next(error)
   }
