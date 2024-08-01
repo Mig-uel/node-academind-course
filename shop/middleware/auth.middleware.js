@@ -1,20 +1,18 @@
 const User = require('../models/user.models')
 
 const isAuthenticated = async (req, res, next) => {
-  if (req.session.user) return next()
+  if (req.authorized) return next()
 
   return res.redirect('/auth/login')
 }
 
 const hydrateUser = async (req, res, next) => {
-  if (req.session.user) {
-    const user = await User.findById(req.session.user)
+  if (!req.session.user) return next()
 
-    req.session.user = user
-    req.session.authorized = true
+  const user = await User.findById(req.session.user)
 
-    await req.session.save()
-  }
+  req.user = user
+  req.authorized = true
 
   next()
 }
