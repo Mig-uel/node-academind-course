@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const Product = require('../models/product.models')
 
 const getHome = async (req, res, next) => {
@@ -145,6 +147,20 @@ const removeFromCart = async (req, res, next) => {
   }
 }
 
+const getInvoice = (req, res, next) => {
+  const { orderId } = req.params
+  const invoiceName = `invoice-${orderId}.pdf`
+  const invoicePath = path.join('data', 'invoices', invoiceName)
+
+  fs.readFile(invoicePath, (err, data) => {
+    if (err) return next(err)
+
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+    res.end(data)
+  })
+}
+
 module.exports = {
   getHome,
   getProducts,
@@ -155,4 +171,5 @@ module.exports = {
   addOrder,
   getCheckout,
   removeFromCart,
+  getInvoice,
 }
