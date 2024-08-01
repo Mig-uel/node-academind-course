@@ -74,6 +74,6 @@ adminRouter
     ],
     editProduct
   )
-adminRouter.route('/delete').delete(isAuthenticated, deleteProduct)
+adminRouter.route('/delete/:id').delete(isAuthenticated, deleteProduct)
 
 module.exports = { adminRouter }
