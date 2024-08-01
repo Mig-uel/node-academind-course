@@ -3,15 +3,15 @@ const Product = require('../models/product.models')
 
 const adminGetProducts = async (req, res, next) => {
   try {
-    const { user } = req.session
+    const { user } = req
     const products = await Product.find({ userId: user._id })
 
     return res.render('admin/admin-product-list', {
       products,
       docTitle: 'Admin All Products',
       path: '/admin/products',
-      isAuthenticated: req.session.user,
-      email: req.session.user.email,
+      isAuthenticated: req.user,
+      email: req.user.email,
     })
   } catch (error) {
     return next(error)
@@ -25,16 +25,16 @@ const getAddProductForm = async (req, res) => {
   return res.status(200).render('admin/add-product', {
     docTitle: 'Add Product',
     path: '/admin/products/add',
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.user,
     errors: errors.array(),
     prevInput: { title: '', imageUrl: '', description: '', price: '' },
-    email: req.session.user.email,
+    email: req.user.email,
   })
 }
 
 const addProduct = async (req, res, next) => {
   try {
-    const { user } = req.session
+    const { user } = req
     const { title, description, price } = req.body
     const image = req.file
 
@@ -45,7 +45,7 @@ const addProduct = async (req, res, next) => {
       return res.status(422).render('admin/add-product', {
         docTitle: 'Add Product',
         path: '/admin/products/add',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         errors: errors.array(),
         prevInput: { title, description, price },
       })
@@ -78,7 +78,7 @@ const getEditProductForm = async (req, res, next) => {
     if (!product) throw new Error('Product not found')
 
     // if user is not the creator of this product
-    if (product.userId.toString() !== req.session.user._id.toString())
+    if (product.userId.toString() !== req.user._id.toString())
       throw new Error('Unauthorized to edit this product')
 
     // validation
@@ -88,9 +88,9 @@ const getEditProductForm = async (req, res, next) => {
       product,
       docTitle: `Edit ${product.title}`,
       path: '/admin/products',
-      isAuthenticated: req.session.user,
+      isAuthenticated: req.user,
       errors: errors.array(),
-      email: req.session.user.email,
+      email: req.user.email,
     })
   } catch (error) {
     return next(error)
@@ -108,7 +108,7 @@ const editProduct = async (req, res, next) => {
     if (!product) throw new Error('Product not found')
 
     // if user is not the creator of this product
-    if (product.userId.toString() !== req.session.user._id.toString())
+    if (product.userId.toString() !== req.user._id.toString())
       throw new Error('Unauthorized to edit this product')
 
     // validation
@@ -119,7 +119,7 @@ const editProduct = async (req, res, next) => {
         product,
         docTitle: `Edit ${product.title}`,
         path: '/admin/products',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         errors: errors.array(),
       })
     }
@@ -149,7 +149,7 @@ const deleteProduct = async (req, res, next) => {
 
     await Product.deleteOne({
       _id: product._id,
-      userId: req.session.user._id,
+      userId: req.user._id,
     })
 
     return res.redirect('/admin/products')
