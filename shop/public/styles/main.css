@@ -275,6 +275,15 @@ form {
   color: #fff;
 }
 
+.view-more-div {
+  text-align: center;
+}
+
+.view-more {
+  width: fit-content;
+  margin-top: 3rem;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
