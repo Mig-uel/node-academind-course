@@ -13,6 +13,7 @@ const {
   getCheckout,
   getProduct,
   removeFromCart,
+  getInvoice,
 } = require('../controllers/shop.controller')
 
 shopRouter.route('/').get(getHome)
@@ -25,5 +26,6 @@ shopRouter
   .delete(isAuthenticated, removeFromCart)
 shopRouter.route('/checkout').get(isAuthenticated, getCheckout)
 shopRouter.route('/orders').get(isAuthenticated, getOrders).post(addOrder)
+shopRouter.route('/orders/:orderId').get(isAuthenticated, getInvoice)
 
 module.exports = { shopRouter }
