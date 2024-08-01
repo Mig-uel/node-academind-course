@@ -8,7 +8,7 @@ const ITEMS_PER_PAGE = 5
 
 const getHome = async (req, res, next) => {
   try {
-    const products = await Product.find({})
+    const products = await Product.find({}).limit(3)
 
     // if no products are found because of mongo error
     if (!products) throw new Error('Cannot fetch products')
