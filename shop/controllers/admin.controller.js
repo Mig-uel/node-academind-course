@@ -162,11 +162,11 @@ const editProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
-    const { id } = req.body
+    const { id } = req.params
 
     const product = await Product.findById(id)
 
-    if (!product) throw new Error('Product not found')
+    if (!product) return res.status(404).json({ msg: 'Product not found' })
 
     deleteFile(product.imageUrl)
 
@@ -175,9 +175,9 @@ const deleteProduct = async (req, res, next) => {
       userId: req.user._id,
     })
 
-    return res.redirect('/admin/products')
+    return res.status(200).json({ msg: 'Product deleted' })
   } catch (error) {
-    return next(error)
+    return res.status(500).json(error)
   }
 }
 
