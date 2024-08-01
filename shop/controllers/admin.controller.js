@@ -1,3 +1,4 @@
+const { deleteFile } = require('../utils/clean-up-files.utils')
 const { validationResult } = require('express-validator')
 const Product = require('../models/product.models')
 
@@ -28,7 +29,7 @@ const getAddProductForm = async (req, res) => {
     isAuthenticated: req.user,
     errors: errors.array(),
     prevInput: { title: '', imageUrl: '', description: '', price: '' },
-    email: req.user.email,
+    email: req?.user?.email,
   })
 }
 
@@ -126,6 +127,10 @@ const editProduct = async (req, res, next) => {
 
     let imageUrl = image?.path || product.imageUrl
 
+    if (imageUrl === image?.path) {
+      deleteFile(product.imageUrl)
+    }
+
     await Product.findByIdAndUpdate(id, {
       title,
       imageUrl,
@@ -146,6 +151,8 @@ const deleteProduct = async (req, res, next) => {
     const product = await Product.findById(id)
 
     if (!product) throw new Error('Product not found')
+
+    deleteFile(product.imageUrl)
 
     await Product.deleteOne({
       _id: product._id,
