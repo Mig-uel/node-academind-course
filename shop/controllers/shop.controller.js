@@ -161,13 +161,13 @@ const getInvoice = async (req, res, next) => {
     const invoiceName = `invoice-${orderId}.pdf`
     const invoicePath = path.join('data', 'invoices', invoiceName)
 
-    fs.readFile(invoicePath, (err, data) => {
-      if (err) return next(err)
+    const file = fs.createReadStream(invoicePath)
 
-      res.setHeader('Content-Type', 'application/pdf')
-      res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
-      res.end(data)
-    })
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+
+    // stream data
+    file.pipe(res)
   } catch (error) {
     return next(error)
   }
