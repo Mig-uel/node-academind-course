@@ -22,6 +22,35 @@
       Laudantium quae corrupti aliquam facilis natus iste voluptates beatae id molestiae. Illo possimus a, facilis quia
       consequatur, explicabo optio ipsa corporis soluta ipsam unde! Enim laudantium ipsa modi necessitatibus laboriosam!
     </p>
+
+    <h1>Featured Products</h1>
+    <% if(products.length) { %>
+    <div class="grid">
+      <% for (const product of products) { %>
+      <article class="card product-item">
+        <header class="card__header">
+          <h1 class="product__title"><%= product.title %></h1>
+        </header>
+        <div class="card__image">
+          <img src="<%= product.imageUrl %>" alt="<%= product.title %>">
+        </div>
+        <div class="card__content">
+          <h2 class="product__price">$<%= product.price %></h2>
+          <p class="product__description"><%= product.description %></p>
+        </div>
+        <div class="card__actions">
+          <a href="/products/<%= product._id %>" class="btn">Details</a>
+          <%- include('../includes/add-to-cart.ejs', {product}) %>
+        </div>
+      </article>
+      <% } %>
+    </div>
+    <% } %>
+
+    <% if (products.length) {%>
+    <div class="view-more-div"> <a href="/products" class="btn view-more">View More Products</a>
+    </div>
+    <% } %>
   </main>
 
   <!-- End Partial -->
