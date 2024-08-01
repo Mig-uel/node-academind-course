@@ -4,7 +4,7 @@ const PDFDocument = require('pdfkit')
 const Product = require('../models/product.models')
 const Order = require('../models/order.models')
 
-const ITEMS_PER_PAGE = 2
+const ITEMS_PER_PAGE = 5
 
 const getHome = async (req, res, next) => {
   try {
@@ -27,7 +27,7 @@ const getHome = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
   try {
-    const { page } = req.query
+    const page = req.query.page || 1
 
     const count = await Product.find({}).estimatedDocumentCount()
 
@@ -44,11 +44,11 @@ const getProducts = async (req, res, next) => {
       path: '/products',
       isAuthenticated: req.user,
       email: req?.user?.email,
-      count,
-      hasNextPage: ITEMS_PER_PAGE * page < count,
-      hasPrevPage: page > 1,
-      nextPage: page + 1,
-      prevPage: page - 1,
+      currentPage: Number(page),
+      hasNextPage: ITEMS_PER_PAGE * Number(page) < count,
+      hasPrevPage: Number(page) > 1,
+      nextPage: Number(page) + 1,
+      prevPage: Number(page) - 1,
       lastPage: Math.ceil(count / ITEMS_PER_PAGE),
     })
   } catch (error) {
