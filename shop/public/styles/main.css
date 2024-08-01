@@ -270,6 +270,11 @@ form {
   color: #fff;
 }
 
+.pagination a.active {
+  background-color: #00695c;
+  color: #fff;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
