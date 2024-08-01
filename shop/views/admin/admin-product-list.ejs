@@ -24,10 +24,8 @@
         </div>
         <div class="card__actions">
           <a href="/admin/edit/<%= product._id %>" class="btn">Edit</a>
-          <form action="/admin/delete?_method=DELETE" method="POST">
-            <button class="btn" type="submit">Delete</button>
-            <input type="hidden" name="id" value="<%= product._id %>" />
-          </form>
+          <button onclick="deleteProduct(this)" class="btn" type="button">Delete</button>
+          <input type="hidden" name="id" value="<%= product._id %>" />
         </div>
       </article>
       <% } %>
@@ -45,3 +43,4 @@
 
   <!-- End Partial -->
   <%- include('../includes/end.ejs') %>
+  <script src="/js/admin.js"></script>
