@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const Product = require('../models/product.models')
+const Order = require('../models/order.models')
 
 const getHome = async (req, res, next) => {
   try {
@@ -147,18 +148,29 @@ const removeFromCart = async (req, res, next) => {
   }
 }
 
-const getInvoice = (req, res, next) => {
-  const { orderId } = req.params
-  const invoiceName = `invoice-${orderId}.pdf`
-  const invoicePath = path.join('data', 'invoices', invoiceName)
+const getInvoice = async (req, res, next) => {
+  try {
+    const { orderId } = req.params
+    const order = await Order.findById(orderId)
 
-  fs.readFile(invoicePath, (err, data) => {
-    if (err) return next(err)
+    if (!order) throw new Error('Order not found')
 
-    res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
-    res.end(data)
-  })
+    if (order.user.toString() !== req.session.user._id.toString())
+      throw new Error('Unauthorized')
+
+    const invoiceName = `invoice-${orderId}.pdf`
+    const invoicePath = path.join('data', 'invoices', invoiceName)
+
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) return next(err)
+
+      res.setHeader('Content-Type', 'application/pdf')
+      res.setHeader('Content-Disposition', `inline; filename=${invoiceName}`)
+      res.end(data)
+    })
+  } catch (error) {
+    return next(error)
+  }
 }
 
 module.exports = {
