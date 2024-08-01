@@ -31,9 +31,14 @@
         </div>
       </article>
       <% } %>
+
     </div>
     <% } else { %>
     <h1>No Products Found</h1>
+    <% } %>
+
+    <% if (products.length) {%>
+    <%- include('../includes/pagination.ejs') %>
     <% } %>
 
   </main>
