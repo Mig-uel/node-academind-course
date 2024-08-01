@@ -14,8 +14,8 @@ const getHome = async (req, res, next) => {
       products,
       docTitle: 'Home',
       path: '/',
-      isAuthenticated: req.session.user,
-      email: req?.session?.user?.email,
+      isAuthenticated: req.user,
+      email: req?.user?.email,
     })
   } catch (error) {
     return next(error)
@@ -33,8 +33,8 @@ const getProducts = async (req, res, next) => {
       products,
       docTitle: 'All Products',
       path: '/products',
-      isAuthenticated: req.session.user,
-      email: req?.session?.user?.email,
+      isAuthenticated: req.user,
+      email: req?.user?.email,
     })
   } catch (error) {
     return next(error)
@@ -53,7 +53,7 @@ const getProduct = async (req, res, next) => {
       product,
       docTitle: product.title,
       path: '/products',
-      isAuthenticated: req.session.user,
+      isAuthenticated: req.user,
       email: req?.session?.user?.email,
     })
   } catch (error) {
@@ -63,7 +63,7 @@ const getProduct = async (req, res, next) => {
 
 const getCart = async (req, res, next) => {
   try {
-    const { user } = req.session
+    const { user } = req
 
     const cart = await user.getCart()
 
@@ -71,7 +71,7 @@ const getCart = async (req, res, next) => {
       cart,
       docTitle: 'Cart',
       path: '/cart',
-      isAuthenticated: req.session.user,
+      isAuthenticated: req.user,
       email: req?.session?.user?.email,
     })
   } catch (error) {
@@ -82,7 +82,7 @@ const getCart = async (req, res, next) => {
 const addToCart = async (req, res, next) => {
   try {
     const { id } = req.body
-    const { user } = req.session
+    const { user } = req
 
     const product = await Product.findById(id)
 
@@ -99,7 +99,7 @@ const addToCart = async (req, res, next) => {
 
 const getOrders = async (req, res, next) => {
   try {
-    const { user } = req.session
+    const { user } = req
 
     const orders = await user.getOrders()
 
@@ -107,8 +107,8 @@ const getOrders = async (req, res, next) => {
       orders,
       docTitle: 'Orders',
       path: '/orders',
-      isAuthenticated: req.session.user,
-      email: req.session.user.email,
+      isAuthenticated: req.user,
+      email: req.user.email,
     })
   } catch (error) {
     return next(error)
@@ -117,7 +117,7 @@ const getOrders = async (req, res, next) => {
 
 const addOrder = async (req, res, next) => {
   try {
-    const { user } = req.session
+    const { user } = req
 
     await user.createOrder()
 
@@ -131,14 +131,14 @@ const getCheckout = async (req, res) => {
   return res.render('shop/checkout', {
     docTitle: 'Checkout',
     path: '/checkout',
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.user,
   })
 }
 
 const removeFromCart = async (req, res, next) => {
   try {
     const { id } = req.body
-    const { user } = req.session
+    const { user } = req
 
     await user.removeFromCart(id)
 
@@ -155,7 +155,7 @@ const getInvoice = async (req, res, next) => {
 
     if (!order) throw new Error('Order not found')
 
-    if (order.user.toString() !== req.session.user._id.toString())
+    if (order.user.toString() !== req.user._id.toString())
       throw new Error('Unauthorized')
 
     const invoiceName = `invoice-${orderId}.pdf`
