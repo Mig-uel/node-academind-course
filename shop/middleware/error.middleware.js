@@ -8,7 +8,7 @@ const errorHandler = (error, req, res, next) => {
       docTitle: 'Internal Server Error',
       path: '',
       isAuthenticated: req.session.authorized,
-      errors: [{ msg: 'Invalid Product ID' }],
+      errors: [{ msg: 'Invalid ID' }],
       email: req?.session?.user?.email,
     })
   }
