@@ -4,6 +4,8 @@ const PDFDocument = require('pdfkit')
 const Product = require('../models/product.models')
 const Order = require('../models/order.models')
 
+const ITEMS_PER_PAGE = 2
+
 const getHome = async (req, res, next) => {
   try {
     const products = await Product.find({})
@@ -25,7 +27,13 @@ const getHome = async (req, res, next) => {
 
 const getProducts = async (req, res, next) => {
   try {
+    const { page } = req.query
+
+    const count = await Product.find({}).estimatedDocumentCount()
+
     const products = await Product.find({})
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE)
 
     // if no products are found because of mongo error
     if (!products) throw new Error('Cannot fetch products')
@@ -36,6 +44,12 @@ const getProducts = async (req, res, next) => {
       path: '/products',
       isAuthenticated: req.user,
       email: req?.user?.email,
+      count,
+      hasNextPage: ITEMS_PER_PAGE * page < count,
+      hasPrevPage: page > 1,
+      nextPage: page + 1,
+      prevPage: page - 1,
+      lastPage: Math.ceil(count / ITEMS_PER_PAGE),
     })
   } catch (error) {
     return next(error)
