@@ -2,10 +2,20 @@ const { deleteFile } = require('../utils/clean-up-files.utils')
 const { validationResult } = require('express-validator')
 const Product = require('../models/product.models')
 
+const ITEMS_PER_PAGE = 3
+
 const adminGetProducts = async (req, res, next) => {
   try {
     const { user } = req
+    const page = req.query.page || 1
+
     const products = await Product.find({ userId: user._id })
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE)
+
+    const count = await Product.find({
+      userId: user._id,
+    }).estimatedDocumentCount()
 
     return res.render('admin/admin-product-list', {
       products,
@@ -13,6 +23,12 @@ const adminGetProducts = async (req, res, next) => {
       path: '/admin/products',
       isAuthenticated: req.user,
       email: req.user.email,
+      currentPage: Number(page),
+      hasNextPage: ITEMS_PER_PAGE * Number(page) < count,
+      hasPrevPage: Number(page) > 1,
+      nextPage: Number(page) + 1,
+      prevPage: Number(page) - 1,
+      lastPage: Math.ceil(count / ITEMS_PER_PAGE),
     })
   } catch (error) {
     return next(error)
