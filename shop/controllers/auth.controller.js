@@ -6,7 +6,7 @@ const { sendMail } = require('../utils/email.utils')
 const path = require('path')
 
 const getLogin = async (req, res) => {
-  if (req.session.authorized) {
+  if (req.authorized) {
     return res.redirect('/')
   }
 
@@ -16,7 +16,7 @@ const getLogin = async (req, res) => {
   return res.render('auth/login', {
     path: '/login',
     docTitle: 'Login',
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.user,
     errors: errors.array(),
   })
 }
@@ -30,7 +30,7 @@ const login = async (req, res, next) => {
       return res.status(422).render('auth/login', {
         path: '/login',
         docTitle: 'Login',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         errors: errors.array(),
       })
     }
@@ -49,7 +49,7 @@ const login = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
-    req.session.destroy()
+    await req.session.destroy()
 
     return res.redirect('/')
   } catch (error) {
@@ -58,7 +58,7 @@ const logout = async (req, res, next) => {
 }
 
 const getSignUp = async (req, res) => {
-  if (req.session.authorized) {
+  if (req.authorized) {
     return res.redirect('/')
   }
 
@@ -68,7 +68,7 @@ const getSignUp = async (req, res) => {
   return res.render('auth/signup', {
     path: '/signup',
     docTitle: 'Sign Up',
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.user,
     errors: errors.array(),
     prevInput: { email: '' },
   })
@@ -84,7 +84,7 @@ const signup = async (req, res, next) => {
       return res.status(422).render('auth/signup', {
         path: '/signup',
         docTitle: 'Sign Up',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         errors: errors.array(),
         prevInput: { email },
       })
@@ -121,7 +121,7 @@ const getResetPasswordRequest = async (req, res) => {
   return res.render('auth/reset-password-request', {
     path: '/login',
     docTitle: 'Reset Password',
-    isAuthenticated: req.session.user,
+    isAuthenticated: req.user,
     errors: errors.array(),
   })
 }
@@ -135,7 +135,7 @@ const resetPasswordRequest = async (req, res, next) => {
       return res.render('auth/reset-password-request', {
         path: '/login',
         docTitle: 'Reset Password',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         errors: errors.array(),
       })
     }
@@ -167,7 +167,7 @@ const resetPasswordRequest = async (req, res, next) => {
           res.status(200).render('info', {
             docTitle: 'Email sent',
             path: '',
-            isAuthenticated: req.session.authorized,
+            isAuthenticated: req.authorized,
             errors: [],
             infos: [
               {
@@ -202,7 +202,7 @@ const getResetPassword = async (req, res, next) => {
     return res.render('auth/reset', {
       path: '/login',
       docTitle: 'Reset Password',
-      isAuthenticated: req.session.user,
+      isAuthenticated: req.user,
       userId: user._id.toString(),
       resetToken: token,
       errors: errors.array(),
@@ -234,7 +234,7 @@ const resetPassword = async (req, res, next) => {
       return res.render('auth/reset', {
         path: '/login',
         docTitle: 'Reset Password',
-        isAuthenticated: req.session.user,
+        isAuthenticated: req.user,
         userId: user._id.toString(),
         resetToken,
         errors: errors.array(),
@@ -251,7 +251,7 @@ const resetPassword = async (req, res, next) => {
       docTitle: 'Success',
       path: '',
       infos: [{ msg: 'Password has been reset successfully' }],
-      isAuthenticated: req.session.authorized,
+      isAuthenticated: req.authorized,
       errors: [],
     })
   } catch (error) {
