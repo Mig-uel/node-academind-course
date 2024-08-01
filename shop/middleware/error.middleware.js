@@ -7,7 +7,7 @@ const errorHandler = (error, req, res, next) => {
     return res.status(status).render('500', {
       docTitle: 'Internal Server Error',
       path: '',
-      isAuthenticated: req.session.authorized,
+      isAuthenticated: req.authorized,
       errors: [{ msg: 'Invalid ID' }],
       email: req?.session?.user?.email,
     })
@@ -17,7 +17,7 @@ const errorHandler = (error, req, res, next) => {
     return res.status(200).render('info', {
       docTitle: 'Email sent',
       path: '',
-      isAuthenticated: req.session.authorized,
+      isAuthenticated: req.authorized,
       errors: [],
       infos: [
         {
@@ -31,7 +31,7 @@ const errorHandler = (error, req, res, next) => {
   return res.status(status).render('500', {
     docTitle: 'Internal Server Error',
     path: '',
-    isAuthenticated: req.session.authorized,
+    isAuthenticated: req.authorized,
     errors: [{ msg: error.message }],
     email: req?.session?.user?.email,
   })
