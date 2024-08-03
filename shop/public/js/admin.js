@@ -4,11 +4,17 @@ const deleteProduct = async (btn) => {
   const parentNode = btn.parentNode
   const id = parentNode.querySelector('input[name="id"]').value
 
-  const deleteRes = await fetch(`/admin/delete/${id}`, {
+  const res = await fetch(`/admin/delete/${id}`, {
     method: 'DELETE',
   })
 
-  const json = await deleteRes.json()
+  if (!res.ok) {
+    alert('Could not delete product')
+    return
+  }
 
-  console.log(json)
+  const json = await res.json()
+
+  const productNode = parentNode.parentNode
+  productNode.parentNode.removeChild(productNode)
 }
