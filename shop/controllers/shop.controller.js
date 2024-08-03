@@ -143,11 +143,23 @@ const addOrder = async (req, res, next) => {
 }
 
 const getCheckout = async (req, res) => {
-  return res.render('shop/checkout', {
-    docTitle: 'Checkout',
-    path: '/checkout',
-    isAuthenticated: req.user,
-  })
+  try {
+    const { user } = req
+
+    const cart = await user.getCart()
+    const cartTotal = cart.reduce((acc, curr) => curr.price * curr.qty + acc, 0)
+
+    return res.render('shop/checkout', {
+      cart,
+      docTitle: 'Checkout',
+      path: '/checkout',
+      isAuthenticated: req.user,
+      email: req?.user?.email,
+      cartTotal,
+    })
+  } catch (error) {
+    return next(error)
+  }
 }
 
 const removeFromCart = async (req, res, next) => {
