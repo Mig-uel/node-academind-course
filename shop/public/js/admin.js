@@ -13,7 +13,7 @@ const deleteProduct = async (btn) => {
     return
   }
 
-  const json = await res.json()
+  await res.json()
 
   const productNode = parentNode.parentNode
   productNode.parentNode.removeChild(productNode)
