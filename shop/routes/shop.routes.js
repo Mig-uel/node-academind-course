@@ -9,11 +9,13 @@ const {
   getCart,
   addToCart,
   getOrders,
-  addOrder,
   getCheckout,
   getProduct,
   removeFromCart,
   getInvoice,
+  addOrder,
+  getSuccess,
+  getCancel,
 } = require('../controllers/shop.controller')
 
 shopRouter.route('/').get(getHome)
@@ -24,8 +26,15 @@ shopRouter
   .get(isAuthenticated, getCart)
   .post(isAuthenticated, addToCart)
   .delete(isAuthenticated, removeFromCart)
+
+// checkout flow
 shopRouter.route('/checkout').get(isAuthenticated, getCheckout)
-shopRouter.route('/orders').get(isAuthenticated, getOrders).post(addOrder)
+shopRouter.route('/checkout/success').get(getSuccess)
+shopRouter.route('/checkout/cancel').get(getCancel)
+
+// orders
+shopRouter.route('/orders').get(isAuthenticated, getOrders)
+shopRouter.route('/orders/add').get(isAuthenticated, addOrder)
 shopRouter.route('/orders/:orderId').get(isAuthenticated, getInvoice)
 
 module.exports = { shopRouter }
