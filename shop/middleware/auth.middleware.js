@@ -1,20 +1,28 @@
 const User = require('../models/user.models')
 
 const isAuthenticated = async (req, res, next) => {
-  if (req.authorized) return next()
+  if (!req.session.authorized) return res.redirect('/auth/login')
 
-  return res.redirect('/auth/login')
+  next()
 }
 
 const hydrateUser = async (req, res, next) => {
-  if (!req.session.user) return next()
+  try {
+    if (!req.session.user) {
+      return next()
+    }
 
-  const user = await User.findById(req.session.user)
+    const user = await User.findById(req.session.user)
 
-  req.user = user
-  req.authorized = true
+    if (!user) return next()
 
-  next()
+    req.user = user
+    req.authorized = true
+
+    next()
+  } catch (error) {
+    return next(error)
+  }
 }
 
 module.exports = { isAuthenticated, hydrateUser }
