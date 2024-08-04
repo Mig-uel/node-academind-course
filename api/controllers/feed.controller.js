@@ -15,6 +15,10 @@ exports.getPosts = (req, res, next) => {
  */
 exports.addPost = (req, res, next) => {
   const { title, content } = req.body
+
+  if (!title || !content)
+    return res.status(500).json({ error: 'Missing fields' })
+
   const post = { title, content, id: new Date().toISOString() }
 
   // create post in database
