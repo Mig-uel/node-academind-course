@@ -3,6 +3,7 @@ const path = require('path')
 const PDFDocument = require('pdfkit')
 const Product = require('../models/product.models')
 const Order = require('../models/order.models')
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 const ITEMS_PER_PAGE = 5
 
@@ -130,24 +131,32 @@ const getOrders = async (req, res, next) => {
   }
 }
 
-const addOrder = async (req, res, next) => {
+const getCheckout = async (req, res, next) => {
   try {
     const { user } = req
 
-    await user.createOrder()
-
-    return res.redirect('/orders')
-  } catch (error) {
-    return next(error)
-  }
-}
-
-const getCheckout = async (req, res) => {
-  try {
-    const { user } = req
+    // if (!user) return res.redirect('/')
 
     const cart = await user.getCart()
     const cartTotal = cart.reduce((acc, curr) => curr.price * curr.qty + acc, 0)
+
+    const stripeSession = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: cart.map((p) => ({
+        price_data: {
+          currency: 'usd',
+          unit_amount: p.price * 100,
+          product_data: {
+            name: p.title,
+            description: p.description,
+          },
+        },
+        quantity: p.qty,
+      })),
+      mode: 'payment',
+      success_url: `${req.protocol}://${req.get('host')}/checkout/success`,
+      cancel_url: `${req.protocol}://${req.get('host')}/checkout/cancel`,
+    })
 
     return res.render('shop/checkout', {
       cart,
@@ -156,6 +165,7 @@ const getCheckout = async (req, res) => {
       isAuthenticated: req.user,
       email: req?.user?.email,
       cartTotal,
+      stripeUrl: stripeSession.url,
     })
   } catch (error) {
     return next(error)
@@ -234,6 +244,34 @@ const getInvoice = async (req, res, next) => {
   }
 }
 
+const addOrder = async (req, res, next) => {
+  try {
+    const { user } = req
+
+    await user.createOrder()
+
+    return res.redirect('/orders')
+  } catch (error) {
+    return next(error)
+  }
+}
+
+const getSuccess = async (req, res) => {
+  return res.render('checkout/success', {
+    url: '/orders/add',
+    docTitle: 'Success',
+    path: '',
+  })
+}
+
+const getCancel = async (req, res) => {
+  return res.render('checkout/cancel', {
+    url: '/cart',
+    docTitle: 'Cancelled',
+    path: '',
+  })
+}
+
 module.exports = {
   getHome,
   getProducts,
@@ -241,8 +279,11 @@ module.exports = {
   getCart,
   addToCart,
   getOrders,
-  addOrder,
   getCheckout,
+  addOrder,
   removeFromCart,
   getInvoice,
+
+  getSuccess,
+  getCancel,
 }
