@@ -83,6 +83,8 @@ UserSchema.methods.removeFromCart = async function (id) {
 }
 
 UserSchema.methods.createOrder = async function () {
+  if (!this.cart.items.length) return
+
   const products = await this.cart.populate(
     'items.productId',
     'title price description imageUrl'
