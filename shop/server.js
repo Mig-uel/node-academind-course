@@ -54,14 +54,15 @@ app.use(methodOverride('_method'))
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false,
-    cookie: {
-      sameSite: 'strict',
-    },
     store,
+    cookie: {
+      sameSite: 'lax',
+    },
   })
 )
+
 app.use(hydrateUser)
 
 // routes
