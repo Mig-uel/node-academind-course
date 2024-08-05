@@ -9,6 +9,9 @@ const app = express()
 // routers
 const feedRouter = require('./routes/feed.route')
 
+// serve static files
+app.use('/images', express.static('images')) // virtual path: /images
+
 // body parser middleware
 app.use(express.json())
 
