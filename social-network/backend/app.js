@@ -3,7 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const { connectToDatabase } = require('./utils/db.utils')
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 4000
 const app = express()
 
 // routers
