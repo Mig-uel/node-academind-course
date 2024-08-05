@@ -1,4 +1,5 @@
 const { validationResult } = require('express-validator')
+const Post = require('../models/post.model')
 
 /**
  * @method GET
@@ -25,33 +26,32 @@ exports.getPosts = (req, res, next) => {
  * @method POST
  * @route /feed/posts
  */
-exports.addPost = (req, res, next) => {
-  const errors = validationResult(req)
+exports.addPost = async (req, res, next) => {
+  try {
+    const errors = validationResult(req)
 
-  if (!errors.isEmpty()) {
-    return res
-      .status(422)
-      .json({
+    if (!errors.isEmpty()) {
+      return res.status(422).json({
         message: 'Invalid fields, please try again.',
         errors: errors.array(),
       })
+    }
+
+    const { title, content } = req.body
+
+    // create post in database
+    const post = new Post({
+      title,
+      content,
+      creator: { name: 'Miguel' },
+      imageUrl: 'images/duckies.jpg',
+    })
+    await post.save()
+
+    if (!post) throw new Error()
+
+    return res.status(201).json({ message: 'Post created', post })
+  } catch (error) {
+    console.log(error)
   }
-
-  const { title, content } = req.body
-
-  if (!title || !content)
-    return res.status(500).json({ error: 'Missing fields' })
-
-  const post = {
-    title,
-    content,
-    _id: Date.now(),
-    content,
-    creator: { name: 'Miguel' },
-    createdAt: new Date(),
-  }
-
-  // create post in database
-
-  return res.status(201).json({ message: 'Post created', post })
 }
