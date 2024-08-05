@@ -1,5 +1,7 @@
 require('dotenv').config({ path: '../.env' })
 const express = require('express')
+const mongoose = require('mongoose')
+const { connectToDatabase } = require('./utils/db.utils')
 
 const port = process.env.PORT || 3000
 const app = express()
@@ -21,6 +23,18 @@ app.use((req, res, next) => {
 // routes
 app.use('/feed', feedRouter)
 
-app.listen(PORT, () => {
-  console.log('Server is running...')
+// connect to database
+connectToDatabase()
+
+mongoose.connection.once('open', () => {
+  // start express server
+  app.listen(port, async () => {
+    console.log(' x - - - - - - - - - - - - x')
+    console.log(`SERVER RUNNING ON PORT: ${port}`)
+    console.log(' x - - - - - - - - - - - - x')
+  })
+})
+
+mongoose.connection.on('error', (error) => {
+  console.log(error)
 })
