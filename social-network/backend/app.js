@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '../.env' })
 const express = require('express')
 const mongoose = require('mongoose')
+const { errorHandler } = require('./middleware/errorHandler.middleware')
 const { connectToDatabase } = require('./utils/db.utils')
 
 const port = process.env.PORT || 4000
@@ -25,6 +26,9 @@ app.use((req, res, next) => {
 
 // routes
 app.use('/feed', feedRouter)
+
+// error handler
+app.use(errorHandler)
 
 // connect to database
 connectToDatabase()
