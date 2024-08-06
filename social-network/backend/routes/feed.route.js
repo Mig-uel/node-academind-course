@@ -2,7 +2,13 @@ const { Router } = require('express')
 const { body } = require('express-validator')
 
 // feed controllers
-const { getPosts, addPost, getPost } = require('../controllers/feed.controller')
+const {
+  getPosts,
+  addPost,
+  getPost,
+  updatePost,
+  deletePost,
+} = require('../controllers/feed.controller')
 
 // init router obj
 const router = Router()
@@ -22,5 +28,18 @@ router.post(
 
 // GET /feed/post/:id
 router.get('/posts/:id', getPost)
+
+// PATCH /feed/posts/:id
+router.patch(
+  '/posts/:id',
+  [
+    body('title').trim().isLength({ min: 5 }),
+    body('content').trim().isLength({ min: 5 }),
+  ],
+  updatePost
+)
+
+// DELETE /feed/posts/:id
+router.delete('/posts/:id', deletePost)
 
 module.exports = router
