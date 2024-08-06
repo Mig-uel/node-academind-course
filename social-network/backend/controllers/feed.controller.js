@@ -61,3 +61,21 @@ exports.addPost = asyncHandler(async (req, res, next) => {
 
   return res.status(201).json({ message: 'Post created', post })
 })
+/**
+ * @method DELETE
+ * @route /feed/posts/:id
+ * @access Private
+ */
+exports.deletePost = asyncHandler(async (req, res, next) => {
+  const { id } = req.params
+
+  const post = await Post.findById(id)
+
+  if (!post) throwError('Post not found.', 404)
+
+  removeImage(post.imageUrl)
+  await post.deleteOne()
+
+  return res.status(200).json({ message: 'Post deleted.' })
+})
+
