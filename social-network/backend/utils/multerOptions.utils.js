@@ -6,7 +6,6 @@ const destination = (req, file, cb) => {
 }
 
 const filename = (req, file, cb) => {
-  console.log(file)
   cb(null, `${uuid()}.${file.originalname.split('.')[1]}`)
 }
 
