@@ -43,13 +43,14 @@ exports.addPost = asyncHandler(async (req, res, next) => {
     throwError('Invalid or missing fields, please try again.', 422)
 
   const { title, content } = req.body
+  const imageUrl = req.file.path.replace('\\', '/')
 
   // create post in database
   const post = new Post({
     title,
     content,
     creator: { name: 'Miguel' },
-    imageUrl: 'images/duckies.jpg',
+    imageUrl,
   })
   await post.save()
 
