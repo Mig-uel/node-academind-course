@@ -1,6 +1,8 @@
 require('dotenv').config({ path: '../.env' })
 const express = require('express')
 const mongoose = require('mongoose')
+const multer = require('multer')
+const { storage, fileFilter } = require('./utils/multerOptions.utils')
 const { errorHandler } = require('./middleware/errorHandler.middleware')
 const { connectToDatabase } = require('./utils/db.utils')
 
@@ -15,6 +17,7 @@ app.use('/images', express.static('images')) // virtual path: /images
 
 // body parser middleware
 app.use(express.json())
+app.use(multer({ storage, fileFilter }).single('image'))
 
 // cors middleware
 app.use((req, res, next) => {
