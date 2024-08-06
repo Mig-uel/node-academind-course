@@ -1,41 +1,46 @@
 const { asyncHandler } = require('../utils/asyncHandler.utils')
 const { validationResult } = require('express-validator')
+const { throwError } = require('../utils/throwError.utils')
 const Post = require('../models/post.model')
 
 /**
  * @method GET
  * @route /feed/posts
+ * @access Private
  */
-exports.getPosts = (req, res, next) => {
-  return res.status(200).json({
-    posts: [
-      {
-        title: 'First Post',
-        content: 'This is the first post!',
-        imageUrl: 'images/duckies.jpeg',
-        creator: {
-          name: 'Miguel',
-        },
-        createdAt: new Date(),
-        _id: Date.now(),
-      },
-    ],
-  })
-}
+exports.getPosts = asyncHandler(async (req, res, next) => {
+  const posts = await Post.find({})
+
+  if (!posts) throwError('Posts not found.', 404)
+
+  return res.status(200).json({ message: 'Posts fetched.', posts })
+})
+
+/**
+ * @method GET
+ * @route /feed/posts/:id
+ * @access Private
+ */
+exports.getPost = asyncHandler(async (req, res, next) => {
+  const { id } = req.params
+
+  const post = await Post.findById(id)
+
+  if (!post) throwError('Post not found.', 404)
+
+  return res.status(200).json({ message: 'Post fetched.', post })
+})
 
 /**
  * @method POST
  * @route /feed/posts
+ * @access Private
  */
 exports.addPost = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req)
 
-  if (!errors.isEmpty()) {
-    const error = new Error('Invalid or missing fields, please try again.')
-    error.statusCode = 422
-
-    throw error
-  }
+  if (!errors.isEmpty())
+    throwError('Invalid or missing fields, please try again.', 422)
 
   const { title, content } = req.body
 
