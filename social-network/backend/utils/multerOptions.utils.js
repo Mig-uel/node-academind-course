@@ -6,7 +6,8 @@ const destination = (req, file, cb) => {
 }
 
 const filename = (req, file, cb) => {
-  cb(null, uuid())
+  console.log(file)
+  cb(null, `${uuid()}.${file.originalname.split('.')[1]}`)
 }
 
 exports.fileFilter = (req, file, cb) => {
