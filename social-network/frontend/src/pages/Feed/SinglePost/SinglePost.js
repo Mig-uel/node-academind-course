@@ -1,7 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
+/** CUSTOM HOC TO EMULATE PREVIOUS FUNCTIONALITY */
+import { withRouter } from '../../../hoc/with-router'
 
-import Image from '../../../components/Image/Image';
-import './SinglePost.css';
+import Image from '../../../components/Image/Image'
+import './SinglePost.css'
 
 class SinglePost extends Component {
   state = {
@@ -9,45 +11,47 @@ class SinglePost extends Component {
     author: '',
     date: '',
     image: '',
-    content: ''
-  };
+    content: '',
+  }
 
   componentDidMount() {
-    const postId = this.props.match.params.postId;
-    fetch('URL')
-      .then(res => {
+    /** USE CUSTOM HOC TO WRAP THIS COMPONENT */
+    const postId = this.props.params.postId
+    fetch(`http://localhost:8080/feed/posts/${postId}`)
+      .then((res) => {
         if (res.status !== 200) {
-          throw new Error('Failed to fetch status');
+          throw new Error('Failed to fetch status')
         }
-        return res.json();
+        return res.json()
       })
-      .then(resData => {
+      .then((resData) => {
         this.setState({
           title: resData.post.title,
           author: resData.post.creator.name,
+          image: 'http://localhost:8080/' + resData.post.imageUrl,
           date: new Date(resData.post.createdAt).toLocaleDateString('en-US'),
-          content: resData.post.content
-        });
+          content: resData.post.content,
+        })
       })
-      .catch(err => {
-        console.log(err);
-      });
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   render() {
     return (
-      <section className="single-post">
+      <section className='single-post'>
         <h1>{this.state.title}</h1>
         <h2>
           Created by {this.state.author} on {this.state.date}
         </h2>
-        <div className="single-post__image">
+        <div className='single-post__image'>
           <Image contain imageUrl={this.state.image} />
         </div>
         <p>{this.state.content}</p>
       </section>
-    );
+    )
   }
 }
 
-export default SinglePost;
+export default withRouter(SinglePost)
