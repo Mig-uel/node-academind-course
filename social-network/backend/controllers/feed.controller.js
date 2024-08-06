@@ -11,11 +11,17 @@ const Post = require('../models/post.model')
  * @access Private
  */
 exports.getPosts = asyncHandler(async (req, res, next) => {
+  const currentPage = req.query.page || 1
+  const perPage = 2
+
+  const totalItems = await Post.find({}).estimatedDocumentCount()
   const posts = await Post.find({})
+    .skip((currentPage - 1) * perPage)
+    .limit(perPage)
 
   if (!posts) throwError('Posts not found.', 404)
 
-  return res.status(200).json({ message: 'Posts fetched.', posts })
+  return res.status(200).json({ message: 'Posts fetched.', posts, totalItems })
 })
 
 /**
