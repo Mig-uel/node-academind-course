@@ -123,10 +123,9 @@ class Feed extends Component {
       }),
     })
       .then((res) => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Creating or editing a post failed!')
-        }
-        return res.json()
+        if (res.ok) return res.json()
+
+        return Promise.reject(res)
       })
       .then((resData) => {
         const post = {
@@ -155,12 +154,13 @@ class Feed extends Component {
         })
       })
       .catch((err) => {
-        console.log(err)
-        this.setState({
-          isEditing: false,
-          editPost: null,
-          editLoading: false,
-          error: err,
+        err.json().then((res) => {
+          this.setState({
+            isEditing: false,
+            editPost: null,
+            editLoading: false,
+            error: 'Invalid or missing fields.',
+          })
         })
       })
   }
