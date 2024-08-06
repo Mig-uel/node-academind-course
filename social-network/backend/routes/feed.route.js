@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { body } = require('express-validator')
 
 // feed controllers
-const { getPosts, addPost } = require('../controllers/feed.controller')
+const { getPosts, addPost, getPost } = require('../controllers/feed.controller')
 
 // init router obj
 const router = Router()
@@ -19,5 +19,8 @@ router.post(
   ],
   addPost
 )
+
+// GET /feed/post/:id
+router.get('/posts/:id', getPost)
 
 module.exports = router
