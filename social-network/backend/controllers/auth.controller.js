@@ -8,7 +8,6 @@ exports.signup = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
-    console.log(errors.array())
     throwError('Validation failed!', 422)
   }
 
