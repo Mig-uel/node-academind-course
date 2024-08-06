@@ -1,3 +1,5 @@
+const fs = require('fs')
+const path = require('path')
 const { asyncHandler } = require('../utils/asyncHandler.utils')
 const { validationResult } = require('express-validator')
 const { throwError } = require('../utils/throwError.utils')
@@ -61,6 +63,38 @@ exports.addPost = asyncHandler(async (req, res, next) => {
 
   return res.status(201).json({ message: 'Post created', post })
 })
+
+/**
+ * @method PATCH
+ * @route /feed/posts/:id
+ * @access Private
+ */
+exports.updatePost = asyncHandler(async (req, res, next) => {
+  const errors = validationResult(req)
+
+  if (!errors.isEmpty())
+    throwError('Invalid or missing fields, please try again.', 422)
+
+  const { id } = req.params
+  const { title, content } = req.body
+  const imageUrl = req.body.image || req.file.path.replace('\\', '/')
+
+  const post = await Post.findById(id)
+
+  if (!post) throwError('Post not found.', 404)
+
+  if (imageUrl !== post.imageUrl) {
+    removeImage(post.imageUrl)
+    post.imageUrl = imageUrl
+  }
+
+  post.title = title
+  post.content = content
+  await post.save()
+
+  return res.status(200).json({ message: 'Post updated.', post })
+})
+
 /**
  * @method DELETE
  * @route /feed/posts/:id
@@ -79,3 +113,11 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
   return res.status(200).json({ message: 'Post deleted.' })
 })
 
+/**
+ * @description Removes old image when updating image of post
+ * @param {*} filePath
+ */
+const removeImage = (filePath) => {
+  filePath = path.join(__dirname, '..', filePath)
+  fs.unlink(filePath, (err) => console.log(err))
+}
