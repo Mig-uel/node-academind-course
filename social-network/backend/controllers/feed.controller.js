@@ -129,6 +129,13 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
   removeImage(post.imageUrl)
   await post.deleteOne()
 
+  // remove post association from user
+  const user = await User.findById(req.userId)
+  if (!user) throwError('User not found.', 404)
+
+  user.posts.pull(id)
+  await user.save()
+
   return res.status(200).json({ message: 'Post deleted.' })
 })
 
