@@ -26,11 +26,12 @@ router.post(
     body('title').trim().isLength({ min: 5 }),
     body('content').trim().isLength({ min: 5 }),
   ],
+  isAuth,
   addPost
 )
 
-// GET /feed/post/:id
-router.get('/posts/:id', getPost)
+// GET /feed/posts/:id
+router.get('/posts/:id', isAuth, getPost)
 
 // PATCH /feed/posts/:id
 router.patch(
@@ -39,10 +40,11 @@ router.patch(
     body('title').trim().isLength({ min: 5 }),
     body('content').trim().isLength({ min: 5 }),
   ],
+  isAuth,
   updatePost
 )
 
 // DELETE /feed/posts/:id
-router.delete('/posts/:id', deletePost)
+router.delete('/posts/:id', isAuth, deletePost)
 
 module.exports = router
