@@ -3,11 +3,13 @@ const { body } = require('express-validator')
 const { throwError } = require('../utils/throwError.utils')
 const User = require('../models/user.model')
 
-// controllers
-const { signup } = require('../controllers/auth.controller')
+// auth controllers
+const { signup, login } = require('../controllers/auth.controller')
 
+// init router obj
 const router = Router()
 
+// POST /auth/signup
 router.post(
   '/signup',
   [
@@ -28,5 +30,8 @@ router.post(
   ],
   signup
 )
+
+// POST /auth/login
+router.post('/login', login)
 
 module.exports = router
