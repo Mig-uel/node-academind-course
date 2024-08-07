@@ -74,13 +74,11 @@ exports.addPost = asyncHandler(async (req, res, next) => {
   user.posts.push(post)
   await user.save()
 
-  return res
-    .status(201)
-    .json({
-      message: 'Post created',
-      post,
-      creator: { _id: user._id, name: user.name },
-    })
+  return res.status(201).json({
+    message: 'Post created',
+    post,
+    creator: { _id: user._id, name: user.name },
+  })
 })
 
 /**
@@ -101,6 +99,7 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(id)
 
   if (!post) throwError('Post not found.', 404)
+  if (post.creator.toString() !== req.userId) throwError('Unauthorized.', 403)
 
   if (imageUrl !== post.imageUrl) {
     removeImage(post.imageUrl)
@@ -125,6 +124,7 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
   const post = await Post.findById(id)
 
   if (!post) throwError('Post not found.', 404)
+  if (post.creator.toString() !== req.userId) throwError('Unauthorized.', 403)
 
   removeImage(post.imageUrl)
   await post.deleteOne()
