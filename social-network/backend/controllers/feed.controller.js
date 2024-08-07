@@ -3,7 +3,10 @@ const path = require('path')
 const { asyncHandler } = require('../utils/asyncHandler.utils')
 const { validationResult } = require('express-validator')
 const { throwError } = require('../utils/throwError.utils')
+
+// models
 const Post = require('../models/post.model')
+const User = require('../models/user.model')
 
 /**
  * @method GET
@@ -60,14 +63,24 @@ exports.addPost = asyncHandler(async (req, res, next) => {
   const post = new Post({
     title,
     content,
-    creator: { name: 'Miguel' },
+    creator: req.userId,
     imageUrl,
   })
   await post.save()
 
-  if (!post) throw new Error()
+  const user = await User.findById(req.userId)
+  if (!user) throwError('User not found.', 404)
 
-  return res.status(201).json({ message: 'Post created', post })
+  user.posts.push(post)
+  await user.save()
+
+  return res
+    .status(201)
+    .json({
+      message: 'Post created',
+      post,
+      creator: { _id: user._id, name: user.name },
+    })
 })
 
 /**
