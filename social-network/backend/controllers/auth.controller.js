@@ -5,6 +5,11 @@ const { validationResult } = require('express-validator')
 const { throwError } = require('../utils/throwError.utils')
 const User = require('../models/user.model')
 
+/**
+ * @method POST
+ * @route /auth/signup
+ * @access public
+ */
 exports.signup = asyncHandler(async (req, res, next) => {
   const errors = validationResult(req)
 
@@ -23,6 +28,12 @@ exports.signup = asyncHandler(async (req, res, next) => {
   return res.status(201).json({ message: 'User created.', userId: user._id })
 })
 
+/**
+ * @method POST
+ * @route /auth/login
+ * @access public
+ */
+exports
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body
 
