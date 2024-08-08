@@ -127,39 +127,49 @@ class Feed extends Component {
       editLoading: true,
     })
 
-    // Set up data (with image!)
-    const formData = new FormData()
-
-    formData.append('title', postData.title)
-    formData.append('content', postData.content)
-    formData.append('image', postData.image)
-
-    let url = 'http://localhost:8080/feed/posts'
-    let method = 'POST'
-    if (this.state.editPost) {
-      url = 'http://localhost:8080/feed/posts/' + this.state.editPost._id
-      method = 'PATCH'
+    let gqlQuery = {
+      query: `
+        mutation {
+          addPost(post: { title: "${postData.title}", content: "${postData.content}", imageUrl: "some url" }) {
+            _id
+            title
+            content
+            imageUrl
+            creator {
+              name
+            }
+            createdAt
+          }
+        }
+      `,
     }
 
-    fetch(url, {
-      method,
-      body: formData,
+    fetch('http://localhost:8080/graphql', {
+      method: 'POST',
+      body: JSON.stringify(gqlQuery),
       headers: {
         Authorization: 'Bearer ' + this.props.token,
+        'Content-Type': 'application/json',
       },
     })
       .then((res) => {
-        if (res.ok) return res.json()
-
-        return Promise.reject(res)
+        return res.json()
       })
       .then((resData) => {
+        if (resData.errors && resData.errors.status === 422) {
+          throw new Error('Post creation failed!')
+        }
+        if (resData.errors) {
+          throw new Error('Post creation failed!')
+        }
+
+        console.log(resData)
         const post = {
-          _id: resData.post._id,
-          title: resData.post.title,
-          content: resData.post.content,
-          creator: resData.post.creator,
-          createdAt: resData.post.createdAt,
+          _id: resData.data.addPost._id,
+          title: resData.data.addPost.title,
+          content: resData.data.addPost.content,
+          creator: resData.data.addPost.creator,
+          createdAt: resData.data.addPost.createdAt,
         }
         this.setState((prevState) => {
           return {
@@ -170,13 +180,12 @@ class Feed extends Component {
         })
       })
       .catch((err) => {
-        err.json().then((res) => {
-          this.setState({
-            isEditing: false,
-            editPost: null,
-            editLoading: false,
-            error: 'Invalid or missing fields.',
-          })
+        console.log(err)
+        this.setState({
+          isEditing: false,
+          editPost: null,
+          editLoading: false,
+          error: 'Invalid or missing fields.',
         })
       })
   }
