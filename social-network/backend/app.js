@@ -6,6 +6,12 @@ const { storage, fileFilter } = require('./utils/multerOptions.utils')
 const { errorHandler } = require('./middleware/errorHandler.middleware')
 const { connectToDatabase } = require('./utils/db.utils')
 
+// graphql
+const { createHandler } = require('graphql-http/lib/use/express') // graphql handler
+const { ruruHTML } = require('ruru/server') // graphql ide
+const graphQLSchema = require('./graphql/schema') // graphql schema
+const { root } = require('./graphql/resolvers') // graphql resolvers
+
 const port = process.env.PORT || 4000
 const app = express()
 
@@ -22,6 +28,21 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   next()
+})
+
+// graphql ide endpoint
+app.use('/ruru', (req, res) => {
+  res.type('html')
+  return res.end(ruruHTML({ endpoint: '/graphql' }))
+})
+
+// graphql-http config
+app.all('/graphql', (req, res) => {
+  return createHandler({
+    schema: graphQLSchema,
+    rootValue: root,
+    context: { req, res },
+  })(req, res)
 })
 
 // error handler
