@@ -152,6 +152,8 @@ exports.deletePost = asyncHandler(async (req, res, next) => {
   user.posts.pull(id)
   await user.save()
 
+  getIo().emit('posts', { action: 'delete', post: id })
+
   return res.status(200).json({ message: 'Post deleted.' })
 })
 
