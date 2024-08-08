@@ -22,6 +22,7 @@ exports.getPosts = asyncHandler(async (req, res, next) => {
 
   const totalItems = await Post.find({}).estimatedDocumentCount()
   const posts = await Post.find({})
+    .populate('creator')
     .skip((currentPage - 1) * perPage)
     .limit(perPage)
 
@@ -79,7 +80,7 @@ exports.addPost = asyncHandler(async (req, res, next) => {
 
   getIo().emit('posts', {
     action: 'create',
-    post,
+    post: { ...post._doc, creator: { _id: user._id, name: user.name } },
   })
 
   return res.status(201).json({
