@@ -83,18 +83,13 @@ class Feed extends Component {
   statusUpdateHandler = (event) => {
     event.preventDefault()
 
-    // const formData = new FormData()
-
-    // formData.append('status', event.target[0].value)
-    const status = event.target[0].value
-
     fetch('http://localhost:8080/status', {
       headers: {
         Authorization: 'Bearer ' + this.props.token,
         'Content-Type': 'application/json',
       },
       method: 'PATCH',
-      body: JSON.stringify({ status }),
+      body: JSON.stringify({ status: this.state.status }),
     })
       .then((res) => {
         if (res.status !== 200 && res.status !== 201) {
