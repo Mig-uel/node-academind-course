@@ -1,4 +1,5 @@
 const errorHandler = (error, req, res, next) => {
+  console.log('ERROR', error)
   const status = error.statusCode || 500
   const { message } = error
   const stack = process.env.NODE_ENV === 'dev' ? error.stack : '🥞'
