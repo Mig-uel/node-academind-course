@@ -42,17 +42,21 @@ connectToDatabase()
 
 mongoose.connection.once('open', () => {
   // start express server
-  const server = app.listen(port, async () => {
+  const httpServer = app.listen(port, async () => {
     console.log(' x - - - - - - - - - - - - x')
     console.log(`SERVER RUNNING ON PORT: ${port}`)
     console.log(' x - - - - - - - - - - - - x')
   })
 
   // create socket server
-  const io = require('socket.io')(server)
+  const { Server } = require('socket.io')
+
+  const io = new Server(httpServer, {
+    cors: { origin: 'http://localhost:3000', methods: ['GET', 'POST'] },
+  })
 
   io.on('connection', (socket) => {
-    console.log('CLIENT CONNECTED')
+    console.log(`SOCKET.IO: ${socket.id} CONNECTED`)
     console.log(' x - - - - - - - - - - - - x')
   })
 })
