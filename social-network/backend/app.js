@@ -11,6 +11,7 @@ const { createHandler } = require('graphql-http/lib/use/express') // graphql han
 const { ruruHTML } = require('ruru/server') // graphql ide
 const graphQLSchema = require('./graphql/schema') // graphql schema
 const { root } = require('./graphql/resolvers') // graphql resolvers
+const { isAuth } = require('./middleware/auth.middleware')
 
 const port = process.env.PORT || 4000
 const app = express()
@@ -33,6 +34,8 @@ app.use((req, res, next) => {
   }
   next()
 })
+
+app.use(isAuth)
 
 // graphql ide endpoint
 app.use('/ruru', (req, res) => {
