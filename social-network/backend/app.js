@@ -35,13 +35,13 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(isAuth)
-
 // graphql ide endpoint
 app.use('/ruru', (req, res) => {
   res.type('html')
   return res.end(ruruHTML({ endpoint: '/graphql' }))
 })
+
+app.use(isAuth)
 
 // graphql-http config
 app.all('/graphql', (req, res) => {
