@@ -9,7 +9,7 @@ const Post = require('../models/post.model')
 // the root provides a resolver function for each API endpoint
 exports.root = {
   // signup
-  async signup(args, req) {
+  async signup(args, { req }) {
     const { email, password, name } = args.userInput
 
     // validation
@@ -89,7 +89,7 @@ exports.root = {
   },
 
   // add post
-  async addPost(args, req) {
+  async addPost(args, { req }) {
     if (!req.isAuth) {
       const error = new Error('Unauthorized!')
       error.code = 401
@@ -126,7 +126,7 @@ exports.root = {
     const post = new Post({ title, content, imageUrl, creator: user })
     const createdPost = await post.save()
 
-    user.push(createdPost)
+    user.posts.push(createdPost)
     await user.save()
 
     return {
