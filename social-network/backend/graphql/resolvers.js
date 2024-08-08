@@ -90,6 +90,12 @@ exports.root = {
 
   // add post
   async addPost(args, req) {
+    if (!req.isAuth) {
+      const error = new Error('Unauthorized!')
+      error.code = 401
+      throw error
+    }
+
     const { title, content, imageUrl } = args.post
 
     // validation
@@ -110,10 +116,18 @@ exports.root = {
       throw error
     }
 
-    const post = new Post({ title, content, imageUrl })
+    const user = await User.findById(req.userId)
+    if (!user) {
+      const error = new Error('Unauthorized!')
+      error.code = 401
+      throw error
+    }
+
+    const post = new Post({ title, content, imageUrl, creator: user })
     const createdPost = await post.save()
 
-    // add creator info
+    user.push(createdPost)
+    await user.save()
 
     return {
       ...createdPost._doc,
