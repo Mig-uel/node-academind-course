@@ -42,9 +42,17 @@ connectToDatabase()
 
 mongoose.connection.once('open', () => {
   // start express server
-  app.listen(port, async () => {
+  const server = app.listen(port, async () => {
     console.log(' x - - - - - - - - - - - - x')
     console.log(`SERVER RUNNING ON PORT: ${port}`)
+    console.log(' x - - - - - - - - - - - - x')
+  })
+
+  // create socket server
+  const io = require('socket.io')(server)
+
+  io.on('connection', (socket) => {
+    console.log('CLIENT CONNECTED')
     console.log(' x - - - - - - - - - - - - x')
   })
 })
