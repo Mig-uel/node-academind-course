@@ -1,7 +1,10 @@
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
+
+// models
 const User = require('../models/user.model')
+const Post = require('../models/post.model')
 
 // the root provides a resolver function for each API endpoint
 exports.root = {
@@ -45,6 +48,7 @@ exports.root = {
   async login(args) {
     const { email, password } = args
 
+    // validation
     const errors = []
     if (!validator.isEmail(email))
       errors.push({ type: 'email', message: 'Invalid email.' })
@@ -82,5 +86,40 @@ exports.root = {
     )
 
     return { token, userId: user._id.toString() }
+  },
+
+  // add post
+  async addPost(args, req) {
+    const { title, content, imageUrl } = args.post
+
+    // validation
+    const errors = []
+    if (validator.isEmpty(title) || !validator.isLength(title, { min: 5 })) {
+      errors.push({ type: 'title', message: 'Invalid title.' })
+    }
+    if (
+      validator.isEmpty(content) ||
+      !validator.isLength(content, { min: 5 })
+    ) {
+      errors.push({ type: 'content', message: 'Invalid content.' })
+    }
+    if (errors.length) {
+      const error = new Error('Invalid input.')
+      error.data = errors
+      error.code = 422
+      throw error
+    }
+
+    const post = new Post({ title, content, imageUrl })
+    const createdPost = await post.save()
+
+    // add creator info
+
+    return {
+      ...createdPost._doc,
+      _id: createdPost._id.toString(),
+      createdAt: createdPost.createdAt.toISOString(),
+      updatedAt: createdPost.updatedAt.toISOString(),
+    }
   },
 }
