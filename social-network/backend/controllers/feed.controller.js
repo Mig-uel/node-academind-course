@@ -105,10 +105,11 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
   const { title, content } = req.body
   const imageUrl = req.body.image || req.file.path.replace('\\', '/')
 
-  const post = await Post.findById(id)
+  const post = await Post.findById(id).populate('creator')
 
   if (!post) throwError('Post not found.', 404)
-  if (post.creator.toString() !== req.userId) throwError('Unauthorized.', 403)
+  if (post.creator._id.toString() !== req.userId)
+    throwError('Unauthorized.', 403)
 
   if (imageUrl !== post.imageUrl) {
     removeImage(post.imageUrl)
@@ -119,7 +120,12 @@ exports.updatePost = asyncHandler(async (req, res, next) => {
   post.content = content
   await post.save()
 
-  return res.status(200).json({ message: 'Post updated.', post })
+  getIo().emit('posts', { action: 'update', post })
+
+  return res.status(200).json({
+    message: 'Post updated.',
+    post,
+  })
 })
 
 /**
