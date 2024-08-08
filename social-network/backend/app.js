@@ -50,6 +50,11 @@ mongoose.connection.once('open', () => {
 
   // create socket server
   const io = require('./socket').init(httpServer)
+
+  io.on('connection', (socket) => {
+    console.log(`SOCKET.IO: ${socket.id} CONNECTED`)
+    console.log(' x - - - - - - - - - - - - x')
+  })
 })
 
 mongoose.connection.on('error', (error) => {
