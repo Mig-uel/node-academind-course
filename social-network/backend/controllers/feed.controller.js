@@ -4,6 +4,9 @@ const { asyncHandler } = require('../utils/asyncHandler.utils')
 const { validationResult } = require('express-validator')
 const { throwError } = require('../utils/throwError.utils')
 
+// websocket
+const { getIo } = require('../socket')
+
 // models
 const Post = require('../models/post.model')
 const User = require('../models/user.model')
@@ -73,6 +76,11 @@ exports.addPost = asyncHandler(async (req, res, next) => {
 
   user.posts.push(post)
   await user.save()
+
+  getIo().emit('posts', {
+    action: 'create',
+    post,
+  })
 
   return res.status(201).json({
     message: 'Post created',
