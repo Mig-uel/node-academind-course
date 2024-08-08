@@ -1,12 +1,11 @@
 const jwt = require('jsonwebtoken')
-const { asyncHandler } = require('../utils/asyncHandler.utils')
 
-exports.isAuth = asyncHandler(async (req, res, next) => {
+exports.isAuth = async (req, res, next) => {
   // retrieve 'authorization' header from request
   const authHeader = req.get('Authorization')
   if (!authHeader) {
     req.isAuth = false
-    next()
+    return next()
   }
 
   // get token from header
@@ -16,11 +15,11 @@ exports.isAuth = asyncHandler(async (req, res, next) => {
 
   if (!decodedToken) {
     req.isAuth = false
-    next()
+    return next()
   }
 
   req.userId = decodedToken.userId
   req.isAuth = true
 
-  next()
-})
+  return next()
+}
