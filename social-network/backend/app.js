@@ -12,6 +12,7 @@ const app = express()
 // routers
 const feedRouter = require('./routes/feed.route')
 const authRouter = require('./routes/auth.route')
+const statusRouter = require('./routes/status.route')
 
 // serve static files
 app.use('/images', express.static('images')) // virtual path: /images
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 // routes
 app.use('/feed', feedRouter)
 app.use('/auth', authRouter)
+app.use('/status', statusRouter)
 
 // error handler
 app.use(errorHandler)
