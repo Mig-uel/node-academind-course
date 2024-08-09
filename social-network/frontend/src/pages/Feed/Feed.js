@@ -62,6 +62,7 @@ class Feed extends Component {
             _id
             title
             content
+            imageUrl
             creator {
               name
             }
@@ -149,31 +150,50 @@ class Feed extends Component {
       editLoading: true,
     })
 
-    let gqlQuery = {
-      query: `
-        mutation {
-          addPost(post: { title: "${postData.title}", content: "${postData.content}", imageUrl: "some url" }) {
-            _id
-            title
-            content
-            imageUrl
-            creator {
-              name
-            }
-            createdAt
-          }
-        }
-      `,
+    const formData = new FormData()
+    formData.append('image', postData.image)
+
+    if (this.state.editPost) {
+      formData.append('oldPath', this.state.editPost.imagePath)
     }
 
-    fetch('http://localhost:8080/graphql', {
+    fetch('http://localhost:8080/image', {
       method: 'POST',
-      body: JSON.stringify(gqlQuery),
       headers: {
         Authorization: 'Bearer ' + this.props.token,
-        'Content-Type': 'application/json',
       },
+      body: formData,
     })
+      .then((res) => res.json())
+      .then((fileRes) => {
+        const imageUrl = fileRes.filePath
+
+        let gqlQuery = {
+          query: `
+            mutation {
+              addPost(post: { title: "${postData.title}", content: "${postData.content}", imageUrl: "${imageUrl}" }) {
+                _id
+                title
+                content
+                imageUrl
+                creator {
+                  name
+                }
+                createdAt
+              }
+            }
+          `,
+        }
+
+        return fetch('http://localhost:8080/graphql', {
+          method: 'POST',
+          body: JSON.stringify(gqlQuery),
+          headers: {
+            Authorization: 'Bearer ' + this.props.token,
+            'Content-Type': 'application/json',
+          },
+        })
+      })
       .then((res) => {
         return res.json()
       })
@@ -192,6 +212,7 @@ class Feed extends Component {
           content: resData.data.addPost.content,
           creator: resData.data.addPost.creator,
           createdAt: resData.data.addPost.createdAt,
+          imagePath: resData.data.addPost.imageUrl,
         }
         this.setState((prevState) => {
           let updatedPosts = [...prevState.posts]
