@@ -1,4 +1,6 @@
 require('dotenv').config({ path: '../.env' })
+const fs = require('fs')
+const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
@@ -35,13 +37,36 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use(isAuth)
+
+app.post('/image', async (req, res, next) => {
+  console.log(req.file)
+
+  try {
+    if (!req.isAuth) throw new Error('Unauthorized!')
+
+    const { oldPath } = req.body
+    if (!req.file) return res.status(200).json({ message: 'No file provided!' })
+
+    if (oldPath) {
+      filePath = path.join(__dirname, '..', oldPath)
+      fs.unlink(oldPath, (err) => console.log(err))
+    }
+
+    return res.status(201).json({
+      message: 'File stored.',
+      filePath: req.file.path.replace('\\', '/'),
+    })
+  } catch (error) {
+    console.log(errror)
+  }
+})
+
 // graphql ide endpoint
 app.use('/ruru', (req, res) => {
   res.type('html')
   return res.end(ruruHTML({ endpoint: '/graphql' }))
 })
-
-app.use(isAuth)
 
 // graphql-http config
 app.all('/graphql', (req, res) => {
