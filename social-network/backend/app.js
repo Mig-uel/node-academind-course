@@ -58,7 +58,7 @@ app.post('/image', async (req, res, next) => {
       filePath: req.file.path.replace('\\', '/'),
     })
   } catch (error) {
-    console.log(errror)
+    console.log(error)
   }
 })
 
