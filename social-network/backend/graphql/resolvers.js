@@ -144,9 +144,15 @@ exports.root = {
       throw error
     }
 
+    let { page } = args
+    if (!page) page = 1
+
+    const perPage = 2
     const totalPosts = await Post.find({}).estimatedDocumentCount()
     const posts = await Post.find({})
       .sort({ createdAt: 'desc' })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
       .populate('creator')
 
     return {
