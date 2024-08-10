@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const { text } = req.body
 
-  const newTodo: ITodo = { id: '1', text }
+  const newTodo: ITodo = { id: new Date().getTime(), text }
 
   todos.push(newTodo)
 
@@ -25,7 +25,7 @@ router.patch('/:id', (req, res, next) => {
   const { id } = req.params
   const { text } = req.body
 
-  const todoIndex = todos.findIndex((todo) => todo.id === id)
+  const todoIndex = todos.findIndex((todo) => todo.id === +id)
   if (!todoIndex) return res.status(404).json({ error: 'Todo not found.' })
 
   todos[todoIndex] = { ...todos[todoIndex], text }
@@ -36,10 +36,10 @@ router.patch('/:id', (req, res, next) => {
 router.delete('/delete/:id', (req, res, next) => {
   const { id } = req.params
 
-  const todo = todos.find((todo) => todo.id === id)
+  const todo = todos.find((todo) => todo.id === +id)
   if (!todo) return res.status(404).json({ error: 'Todo not found.' })
 
-  todos = todos.filter((todo) => todo.id !== id)
+  todos = todos.filter((todo) => todo.id !== +id)
 })
 
 export default router
