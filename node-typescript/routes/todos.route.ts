@@ -3,6 +3,8 @@ import { Router } from 'express'
 // models
 import { ITodo } from '../models/todos.controller'
 
+type RequestBody = { text: string }
+
 let todos: ITodo[] = []
 
 const router = Router()
@@ -12,7 +14,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  const { text } = req.body
+  const { text } = req.body as RequestBody
 
   const newTodo: ITodo = { id: new Date().getTime(), text }
 
@@ -23,7 +25,7 @@ router.post('/', (req, res, next) => {
 
 router.patch('/:id', (req, res, next) => {
   const { id } = req.params
-  const { text } = req.body
+  const { text } = req.body as RequestBody
 
   const todoIndex = todos.findIndex((todo) => todo.id === +id)
   if (!todoIndex) return res.status(404).json({ error: 'Todo not found.' })
