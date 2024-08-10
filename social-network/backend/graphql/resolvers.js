@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const validator = require('validator')
 const jwt = require('jsonwebtoken')
+const { unlinkFile } = require('../utils/unlinkFile.utils')
 
 // models
 const User = require('../models/user.model')
@@ -177,8 +178,6 @@ exports.root = {
 
     const { id } = args
 
-    console.log(id)
-
     const post = await Post.findById(id).populate('creator')
     if (!post) {
       const error = new Error('Post not found!')
@@ -214,7 +213,7 @@ exports.root = {
     }
 
     if (post.creator._id.toString() !== req.userId) {
-      const error = new Error('Unauthorized')
+      const error = new Error('Unauthorized!')
       error.code = 403
       throw error
     }
@@ -251,5 +250,55 @@ exports.root = {
       createdAt: post.createdAt.toISOString(),
       updatedAt: post.updatedAt.toISOString(),
     }
+  },
+
+  // delete post
+  async deletePost(args, { req }) {
+    if (!req.isAuth) {
+      const error = new Error('Unauthorized!')
+      error.code = 401
+      throw error
+    }
+
+    const { id } = args
+    console.log(id)
+
+    // validate
+    const errors = []
+    if (validator.isEmpty(id))
+      errors.push({ type: 'id', message: 'Invalid ID.' })
+
+    const post = await Post.findById(id)
+
+    if (!post) {
+      const error = new Error('Post not found.')
+      error.code = 404
+      throw error
+    }
+
+    if (post.creator.toString() !== req.userId) {
+      const error = new Error('Unauthorized!')
+      error.code = 403
+      throw error
+    }
+
+    // remove image from server
+    unlinkFile(post.imageUrl)
+
+    await post.deleteOne()
+
+    // delete post from user
+    const user = await User.findById(req.userId)
+
+    if (!user) {
+      const error = new Error('User not found.')
+      error.status = 404
+      throw error
+    }
+
+    user.posts.pull(id)
+    await user.save()
+
+    return true
   },
 }
