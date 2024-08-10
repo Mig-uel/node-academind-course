@@ -301,4 +301,55 @@ exports.root = {
 
     return true
   },
+
+  // get status
+  async status(args, { req }) {
+    if (!req.isAuth) {
+      const error = new Error('Unauthorized!')
+      error.code = 401
+      throw error
+    }
+
+    const user = await User.findById(req.userId)
+    if (!user) {
+      const error = new Error('User not found.')
+      error.code = 404
+      throw error
+    }
+
+    return {
+      status: user.status,
+    }
+  },
+
+  // update status
+  async updateStatus(args, { req }) {
+    if (!req.isAuth) {
+      const error = new Error('Unauthorized!')
+      error.code = 401
+      throw error
+    }
+
+    const { status } = args
+
+    const errors = []
+    if (validator.isEmpty(status))
+      errors.push({ type: 'status', message: 'Status cannot be empty.' })
+    if (validator.isURL(status))
+      errors.push({ type: 'status', message: 'Status cannot be a URL.' })
+
+    const user = await User.findById(req.userId)
+    if (!user) {
+      const error = new Error('User not found.')
+      error.code = 404
+      throw error
+    }
+
+    user.status = status
+    await user.save()
+
+    return {
+      status,
+    }
+  },
 }
