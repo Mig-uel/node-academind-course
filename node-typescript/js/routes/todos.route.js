@@ -8,14 +8,14 @@ router.get('/', (req, res, next) => {
 });
 router.post('/', (req, res, next) => {
     const { text } = req.body;
-    const newTodo = { id: '1', text };
+    const newTodo = { id: new Date().getTime(), text };
     todos.push(newTodo);
     return res.status(201).json({ message: 'Todo added!', todos });
 });
 router.patch('/:id', (req, res, next) => {
     const { id } = req.params;
     const { text } = req.body;
-    const todoIndex = todos.findIndex((todo) => todo.id === id);
+    const todoIndex = todos.findIndex((todo) => todo.id === +id);
     if (!todoIndex)
         return res.status(404).json({ error: 'Todo not found.' });
     todos[todoIndex] = Object.assign(Object.assign({}, todos[todoIndex]), { text });
@@ -23,9 +23,9 @@ router.patch('/:id', (req, res, next) => {
 });
 router.delete('/delete/:id', (req, res, next) => {
     const { id } = req.params;
-    const todo = todos.find((todo) => todo.id === id);
+    const todo = todos.find((todo) => todo.id === +id);
     if (!todo)
         return res.status(404).json({ error: 'Todo not found.' });
-    todos = todos.filter((todo) => todo.id !== id);
+    todos = todos.filter((todo) => todo.id !== +id);
 });
 exports.default = router;
