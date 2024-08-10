@@ -9,8 +9,8 @@
     "typescript": "^5.5.4"
   },
   "scripts": {
-    "start": "node ./js/index.js",
-    "dev": "nodemon ./js/index.js",
+    "start": "node ./js/app.js",
+    "dev": "nodemon ./js/app.js",
     "build": "tsc"
   },
   "devDependencies": {
