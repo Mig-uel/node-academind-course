@@ -1,9 +1,9 @@
-import { Router } from 'express'
+import { Router, Request } from 'express'
 
 // models
 import { ITodo } from '../models/todos.controller'
 
-type RequestBody = { text: string }
+type CustomRequest = Request<{ id: number }, any, { text: string }, any>
 
 let todos: ITodo[] = []
 
@@ -13,8 +13,8 @@ router.get('/', (req, res, next) => {
   return res.status(200).json({ todos })
 })
 
-router.post('/', (req, res, next) => {
-  const { text } = req.body as RequestBody
+router.post('/', (req: CustomRequest, res, next) => {
+  const { text } = req.body
 
   const newTodo: ITodo = { id: new Date().getTime(), text }
 
@@ -23,9 +23,9 @@ router.post('/', (req, res, next) => {
   return res.status(201).json({ message: 'Todo added!', todos })
 })
 
-router.patch('/:id', (req, res, next) => {
+router.patch('/:id', (req: CustomRequest, res, next) => {
   const { id } = req.params
-  const { text } = req.body as RequestBody
+  const { text } = req.body
 
   const todoIndex = todos.findIndex((todo) => todo.id === +id)
   if (!todoIndex) return res.status(404).json({ error: 'Todo not found.' })
@@ -35,7 +35,7 @@ router.patch('/:id', (req, res, next) => {
   return res.status(200).json({ message: 'Updated todo.', todos })
 })
 
-router.delete('/delete/:id', (req, res, next) => {
+router.delete('/delete/:id', (req: CustomRequest, res, next) => {
   const { id } = req.params
 
   const todo = todos.find((todo) => todo.id === +id)
