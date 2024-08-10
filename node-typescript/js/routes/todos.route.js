@@ -10,7 +10,7 @@ router.post('/', (req, res, next) => {
     const { text } = req.body;
     const newTodo = { id: '1', text };
     todos.push(newTodo);
-    return res.status(201).json({ message: 'Todo added!' });
+    return res.status(201).json({ message: 'Todo added!', todos });
 });
 router.patch('/:id', (req, res, next) => {
     const { id } = req.params;
