@@ -39,8 +39,6 @@ app.use((req, res, next) => {
 app.use(isAuth)
 
 app.post('/image', async (req, res, next) => {
-  console.log(req.file)
-
   try {
     if (!req.isAuth) throw new Error('Unauthorized!')
 

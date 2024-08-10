@@ -261,7 +261,6 @@ exports.root = {
     }
 
     const { id } = args
-    console.log(id)
 
     // validate
     const errors = []
