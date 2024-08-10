@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 // models
-import { ITodo } from '../models/todos'
+import { ITodo } from '../models/todos.controller'
 
 let todos: ITodo[] = []
 
