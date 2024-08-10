@@ -1,4 +1,4 @@
 export interface ITodo {
-  id: string
+  id: number
   text: string
 }
