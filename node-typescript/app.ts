@@ -1,7 +1,7 @@
 import express from 'express'
 
 // routes
-import todosRouter from './routes/todos'
+import todosRouter from './routes/todos.route'
 
 const app = express()
 const port = 8080
