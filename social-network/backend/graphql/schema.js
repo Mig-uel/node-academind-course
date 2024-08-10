@@ -53,6 +53,9 @@ module.exports = buildSchema(`
     posts(page: Int): PostsData
     post(id: ID!): Post!
     status: Status!
+    # instead of status route, can do generic user route to get user
+    # and pick status from the return 'user: User!'
+    # mutation stays the same for args but returns user
   }
 
   type RootMutation {
