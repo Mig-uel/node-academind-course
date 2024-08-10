@@ -244,7 +244,6 @@ exports.root = {
     }
 
     const updatedPost = await post.save()
-    console.log(updatedPost)
 
     return {
       ...updatedPost._doc,
