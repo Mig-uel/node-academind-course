@@ -1,9 +1,8 @@
 require('dotenv').config({ path: '../.env' })
-const fs = require('fs')
-const path = require('path')
 const express = require('express')
 const mongoose = require('mongoose')
 const multer = require('multer')
+const { unlinkFile } = require('./utils/unlinkFile.utils')
 const { storage, fileFilter } = require('./utils/multerOptions.utils')
 const { errorHandler } = require('./middleware/errorHandler.middleware')
 const { connectToDatabase } = require('./utils/db.utils')
@@ -49,8 +48,7 @@ app.post('/image', async (req, res, next) => {
     if (!req.file) return res.status(200).json({ message: 'No file provided!' })
 
     if (oldPath) {
-      filePath = path.join(__dirname, '..', oldPath)
-      fs.unlink(oldPath, (err) => console.log(err))
+      unlinkFile(oldPath)
     }
 
     return res.status(201).json({
