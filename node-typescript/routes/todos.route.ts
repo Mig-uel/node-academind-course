@@ -18,7 +18,7 @@ router.post('/', (req, res, next) => {
 
   todos.push(newTodo)
 
-  return res.status(201).json({ message: 'Todo added!' })
+  return res.status(201).json({ message: 'Todo added!', todos })
 })
 
 router.patch('/:id', (req, res, next) => {
