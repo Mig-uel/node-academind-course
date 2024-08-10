@@ -6,6 +6,8 @@ import todosRouter from './routes/todos'
 const app = express()
 const port = 8080
 
+app.use(express.json())
+
 app.use('/todos', todosRouter)
 
 app.listen(port, () => {
