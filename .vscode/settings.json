@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["Academind", "graphiql", "ruru", "todos"]
+  "cSpell.words": ["Academind", "graphiql", "ruru", "todos"],
+  "deno.enable": false
 }
