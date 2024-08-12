@@ -1,8 +1,10 @@
-const app = require('express')()
+const express = require('express')
+
+const app = express()
 const port = 3000
 
 // middleware
-app.use(require('express').json())
+app.use(express.json())
 
 // routers
 const todosRouter = require('./routes/todos.route')
