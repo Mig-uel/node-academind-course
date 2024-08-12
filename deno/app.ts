@@ -1,12 +1,9 @@
-const port = 3000
+import { Application } from 'https://deno.land/x/oak/mod.ts'
 
-const handler = (req: Request): Response => {
-  const body = `Your user agent is: \n\n${
-    req.headers.get('user-agent') ?? 'Unknown'
-  }`
+const app = new Application()
 
-  console.log('Hello')
-  return new Response(body, { status: 200 })
-}
+app.use((ctx) => {
+  ctx.response.body = 'Hello, world!'
+})
 
-const server = Deno.serve({ port }, handler)
+await app.listen({ port: 3000 })
