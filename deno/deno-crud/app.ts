@@ -3,6 +3,11 @@ import { Application } from 'https://deno.land/x/oak@v16.1.0/mod.ts'
 // router
 import todosRouter from './routes/todos.route.ts'
 
+// database
+import { connect } from './utils/db_client.helpers.ts'
+
+connect()
+
 const app = new Application()
 
 // middleware
