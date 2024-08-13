@@ -11,6 +11,20 @@ app.use(async (ctx, next) => {
   await next()
 })
 
+// set cors policy
+app.use(async (ctx, next) => {
+  const { response } = ctx
+
+  response.headers.set('Access-Control-Allow-Origin', '*')
+  response.headers.set(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PATCH, DELETE'
+  )
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+
+  await next()
+})
+
 // routes
 app.use(todosRouter.routes())
 app.use(todosRouter.allowedMethods())
