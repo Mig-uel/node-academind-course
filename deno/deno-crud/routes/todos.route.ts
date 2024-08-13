@@ -1,26 +1,36 @@
 import { Router } from 'https://deno.land/x/oak/mod.ts'
+import { Document, ObjectId } from 'https://deno.land/x/mongo@v0.32.0/mod.ts'
+import { getDB } from '../utils/db_client.helpers.ts'
 
 const router = new Router()
 
 interface ITodo {
-  id: string
+  id?: string
   text: string
 }
 
 let todos: ITodo[] = []
 
-router.get('/', (ctx) => {
+router.get('/', async (ctx) => {
+  const todos = await getDB().collection('todos').find().toArray()
+
+  const todosArray = todos.map((todo: Document) => {
+    return { id: todo._id.toString(), text: todo.text }
+  })
+
   const { response } = ctx
-  response.body = { todos }
+  response.body = { todos: todosArray }
 })
 
 router.post('/', async (ctx) => {
   const { response } = ctx
   const { text } = await ctx.request.body.json()
 
-  const todo: ITodo = { id: new Date().toISOString(), text }
+  const todo: ITodo = { text }
 
-  todos.push(todo)
+  const id = await getDB().collection('todos').insertOne(todo)
+
+  todo.id = id.toString()
 
   response.body = { message: 'created todo', todo }
 })
