@@ -54,7 +54,7 @@ const Todos = () => {
     let method = 'POST'
     if (editedTodo) {
       url = url + '/' + editedTodo.id
-      method = 'PUT'
+      method = 'PATCH'
     }
     const response = await fetch(url, {
       method,
