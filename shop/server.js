@@ -90,7 +90,7 @@ db()
 
 mongoose.connection.once('open', () => {
   // start express server
-  app.listen(port, async () => {
+  app.listen(port, '0.0.0.0', async () => {
     console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
   })
 })
