@@ -36,25 +36,26 @@ router.post('/', async (ctx) => {
 })
 
 router.patch('/:id', async (ctx) => {
-  const { id } = ctx.params
+  const { id } = ctx.params!
   const { response } = ctx
   const { text } = await ctx.request.body.json()
 
-  const index = todos.findIndex((todo) => todo.id === id)
+  const _todo = await getDB()
+    .collection('todos')
+    .updateOne({ _id: new ObjectId(id) }, { $set: { text } })
 
-  if (!index) response.body = { error: 'todo not found' }
-
-  todos[index] = { ...todos[index], text }
-
-  response.body = { message: 'todo updated', todos }
+  response.body = { message: 'todo updated' }
 })
 
-router.delete('/:id', (ctx) => {
-  const { id } = ctx.params
+router.delete('/:id', async (ctx) => {
+  const { id } = ctx.params!
   const { response } = ctx
 
-  todos = todos.filter((todo) => todo.id !== id)
-  response.body = { message: 'todo deleted', todos }
+  await getDB()
+    .collection('todos')
+    .deleteOne({ _id: new ObjectId(id) })
+
+  response.body = { message: 'todo deleted' }
 })
 
 export default router
