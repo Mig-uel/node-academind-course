@@ -9,8 +9,6 @@ interface ITodo {
   text: string
 }
 
-let todos: ITodo[] = []
-
 router.get('/', async (ctx) => {
   const todos = await getDB().collection('todos').find().toArray()
 
