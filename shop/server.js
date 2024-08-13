@@ -1,6 +1,7 @@
 // core modules
 const fs = require('fs')
 const path = require('path')
+const https = require('https')
 
 // dev
 require('colors')
@@ -38,6 +39,9 @@ const store = new MongoDBStore({
   uri: process.env.MONGO_URI,
   collection: 'sessions',
 })
+
+const privateKey = fs.readFileSync('-server.key')
+const certificate = fs.readFileSync('server.cert')
 
 // express setup
 app.set('view engine', 'ejs') // set view engine
@@ -90,9 +94,11 @@ db()
 
 mongoose.connection.once('open', () => {
   // start express server
-  app.listen(port, async () => {
-    console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
-  })
+  https
+    .createServer({ key: privateKey, cert: certificate }, app)
+    .listen(port, async () => {
+      console.log(`SERVER RUNNING ON PORT: ${port}`.green.inverse)
+    })
 })
 
 mongoose.connection.on('error', (error) => {
