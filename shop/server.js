@@ -1,4 +1,5 @@
 // core modules
+const fs = require('fs')
 const path = require('path')
 
 // dev
@@ -8,6 +9,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
+const compression = require('compression')
+const morgan = require('morgan')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
@@ -42,12 +45,17 @@ app.set('views', 'views') // already default, just example
 
 // middleware
 app.use(helmet())
+app.use(compression())
+
+// logging
+const loggerStream = fs.createWriteStream(
+  path.join(__dirname, 'logs', 'access.log'),
+  { flags: 'a' }
+)
+app.use(morgan('combined', { stream: loggerStream }))
+
 app.use(express.static('public')) // serve static files/grant access (public folder)
 app.use('/images', express.static('images')) // serve static files/grant access (images folder)
-app.use((req, res, next) => {
-  console.log(`[${req.method}] - ${req.url} - ${res.statusCode}`.yellow)
-  next()
-}) // method - url - status
 app.use(express.urlencoded({ extended: true })) // parse form data
 app.use(multer({ storage, fileFilter }).single('image')) // parse image data
 app.use(express.json()) // parse json data
