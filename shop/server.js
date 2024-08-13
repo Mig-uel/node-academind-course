@@ -7,6 +7,7 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const helmet = require('helmet')
 const methodOverride = require('method-override')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session)
@@ -40,6 +41,7 @@ app.set('view engine', 'ejs') // set view engine
 app.set('views', 'views') // already default, just example
 
 // middleware
+app.use(helmet())
 app.use(express.static('public')) // serve static files/grant access (public folder)
 app.use('/images', express.static('images')) // serve static files/grant access (images folder)
 app.use((req, res, next) => {
